@@ -34,6 +34,22 @@ describe('REST auth', () => {
 		expect((await getMe(client)).id).toBe('u1');
 		expect(fetchFn.mock.calls[0][0]).toBe('/api/admin/auth/me');
 	});
+
+	it('setup POSTs email and password', async () => {
+		const { client, fetchFn } = mkClient({ user: { id: 'u1' }, token: 't' });
+		await setup('a@b.co', 'pw', client);
+		expect(fetchFn.mock.calls[0][0]).toBe('/api/admin/setup');
+		expect(fetchFn.mock.calls[0][1].method).toBe('POST');
+		expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({ email: 'a@b.co', password: 'pw' });
+	});
+
+	it('logout POSTs empty body', async () => {
+		const { client, fetchFn } = mkClient({}, 204);
+		await logout(client);
+		expect(fetchFn.mock.calls[0][0]).toBe('/api/admin/auth/logout');
+		expect(fetchFn.mock.calls[0][1].method).toBe('POST');
+		expect(fetchFn.mock.calls[0][1].body).toBe(JSON.stringify({}));
+	});
 });
 
 describe('isMFAChallenge', () => {
