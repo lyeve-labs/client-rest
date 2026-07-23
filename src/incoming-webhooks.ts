@@ -35,5 +35,5 @@ export async function updateIncomingWebhook(
 }
 
 export async function deleteIncomingWebhook(id: string, client: HttpClient): Promise<void> {
-	return client.delete(`/api/admin/incoming-webhooks/${encodeURIComponent(id)}`);
+	return client.delete<void>(`/api/admin/incoming-webhooks/${encodeURIComponent(id)}`);
 }
