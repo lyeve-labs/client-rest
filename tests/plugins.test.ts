@@ -85,7 +85,7 @@ describe('REST plugins - config', () => {
 describe('REST plugins - operations', () => {
   it('rollbackPlugin POSTs to /api/admin/plugins/{name}/rollback?n=N', async () => {
     const { client, fetchFn } = mkClient({ status: 'ok', update_available: false, plugin: 'my-plugin', rolled_back_count: 1 });
-    const result = await rollbackPlugin('my-plugin', 1, client);
+    const result = await rollbackPlugin('my-plugin', client, 1);
     expect(result.status).toBe('ok');
     expect(fetchFn.mock.calls[0][0]).toBe('/api/admin/plugins/my-plugin/rollback?n=1');
     expect(fetchFn.mock.calls[0][1].method).toBe('POST');
@@ -94,7 +94,7 @@ describe('REST plugins - operations', () => {
 
   it('rollbackPlugin defaults n=1', async () => {
     const { client, fetchFn } = mkClient({ status: 'ok', update_available: false, plugin: 'my-plugin', rolled_back_count: 1 });
-    await rollbackPlugin('my-plugin', undefined as unknown as number, client);
+    await rollbackPlugin('my-plugin', client);
     expect(fetchFn.mock.calls[0][0]).toBe('/api/admin/plugins/my-plugin/rollback?n=1');
   });
 

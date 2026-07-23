@@ -120,8 +120,8 @@ export function resetPluginConfig(
 /** Roll back a plugin by N migration versions. Requires super_admin. */
 export function rollbackPlugin(
 	name: string,
-	n = 1,
-	client: HttpClient
+	client: HttpClient,
+	n = 1
 ): Promise<RollbackResult> {
 	return client.post<RollbackResult>(
 		`/api/admin/plugins/${encodeURIComponent(name)}/rollback?n=${n}`,
