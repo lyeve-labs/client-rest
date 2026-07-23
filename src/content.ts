@@ -26,8 +26,8 @@ export function listContent(
 	client: HttpClient,
 	limit = 25,
 	offset = 0
-): Promise<Content[]> {
-	return client.get<Content[]>(
+): Promise<{ items: Content[]; total: number }> {
+	return client.get<{ items: Content[]; total: number }>(
 		`/api/v1/content/${encodeURIComponent(schemaName)}?limit=${limit}&offset=${offset}`
 	);
 }
