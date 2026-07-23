@@ -22,10 +22,10 @@ const client = createClient(fetch, { Authorization: 'Bearer <token>' });
 const schemas = await getSchemas(client);
 
 // Content
-const entries = await listContent('articles', client, { limit: 20 });
+const entries = await listContent('articles', client, 20);
 
 // Webhooks
-const health = await getWebhookHealth(client);
+const health = await getWebhookHealth('webhook-id', client);
 ```
 
 ## Modules
