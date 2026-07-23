@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-07-24
+
+### Fixed
+
+- `listContent` return type corrected to `{ items: Content[]; total: number }` to match the actual API envelope.
+- `rollbackPlugin` parameter order changed to `(name, client, n?)` so TypeScript can infer types without callers passing undefined for the client.
+- Test fixtures updated to use correct field names (`schema_name`, `max_attempts`, `base_delay_ms`, `max_delay_ms`).
+- README usage examples fixed to match actual function signatures.
 
 ## [0.1.0] - 2026-07-23
 
