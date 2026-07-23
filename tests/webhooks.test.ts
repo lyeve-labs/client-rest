@@ -188,18 +188,18 @@ describe('REST webhooks - dead letter queue', () => {
 
 describe('REST webhooks - retry config & health', () => {
   it('getRetryConfig GETs /api/admin/webhooks/{id}/retry-config', async () => {
-    const { client, fetchFn } = mkClient({ max_retries: 3, initial_interval_ms: 1000 });
+    const { client, fetchFn } = mkClient({ max_attempts: 3, base_delay_ms: 1000, max_delay_ms: 30000 });
     const config = await getRetryConfig('wh1', client);
-    expect(config.max_retries).toBe(3);
+    expect(config.max_attempts).toBe(3);
     expect(fetchFn.mock.calls[0][0]).toBe('/api/admin/webhooks/wh1/retry-config');
     expect(fetchFn.mock.calls[0][1].method).toBe('GET');
   });
 
   it('updateRetryConfig PUTs input to /api/admin/webhooks/{id}/retry-config', async () => {
-    const { client, fetchFn } = mkClient({ max_retries: 5, initial_interval_ms: 2000 });
-    const input = { max_retries: 5, initial_interval_ms: 2000 };
+    const { client, fetchFn } = mkClient({ max_attempts: 5, base_delay_ms: 2000, max_delay_ms: 30000 });
+    const input = { max_attempts: 5, base_delay_ms: 2000, max_delay_ms: 30000 };
     const config = await updateRetryConfig('wh1', input, client);
-    expect(config.max_retries).toBe(5);
+    expect(config.max_attempts).toBe(5);
     expect(fetchFn.mock.calls[0][0]).toBe('/api/admin/webhooks/wh1/retry-config');
     expect(fetchFn.mock.calls[0][1].method).toBe('PUT');
     expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);

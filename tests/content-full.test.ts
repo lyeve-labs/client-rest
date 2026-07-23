@@ -24,10 +24,10 @@ function mkClient(body: unknown = {}, status = 200) {
 
 describe('REST content - CRUD', () => {
   it('listContent(schema, client, limit, offset) GETs /api/v1/content/{schema}?limit=N&offset=N', async () => {
-    const { client, fetchFn } = mkClient([{ id: 'e1', schema: 'articles', slug: 'hello', data: { title: 'Hello' }, status: 'published', created_at: '', updated_at: '' }]);
+    const { client, fetchFn } = mkClient([{ id: 'e1', schema_name: 'articles', data: { title: 'Hello' }, created_at: '', updated_at: '' }]);
     const items = await listContent('articles', client, 10, 0);
     expect(items).toHaveLength(1);
-    expect(items[0].slug).toBe('hello');
+    expect(items[0].schema_name).toBe('articles');
     expect(fetchFn.mock.calls[0][0]).toBe('/api/v1/content/articles?limit=10&offset=0');
     expect(fetchFn.mock.calls[0][1].method).toBe('GET');
   });
@@ -45,7 +45,7 @@ describe('REST content - CRUD', () => {
   });
 
   it('getContent GETs /api/v1/content/{schema}/{id}', async () => {
-    const { client, fetchFn } = mkClient({ id: 'e1', schema: 'articles', slug: 'hello' });
+    const { client, fetchFn } = mkClient({ id: 'e1', schema_name: 'articles' });
     const item = await getContent('articles', 'e1', client);
     expect(item.id).toBe('e1');
     expect(fetchFn.mock.calls[0][0]).toBe('/api/v1/content/articles/e1');
