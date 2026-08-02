@@ -20,14 +20,20 @@ export interface CursorPage {
   total: number;
 }
 
-/** GET /api/v1/content/{schema} - list with offset pagination. */
+/**
+ * GET /api/v1/content/{schema} - list with offset pagination.
+ *
+ * Returns a bare array, not a page envelope: the offset endpoint responds with
+ * the entries alone and carries no total. Use listContentCursor when you need
+ * a total or a next-page token.
+ */
 export function listContent(
   schemaName: string,
   client: HttpClient,
   limit = 25,
   offset = 0,
-): Promise<{ items: Content[]; total: number }> {
-  return client.get<{ items: Content[]; total: number }>(
+): Promise<Content[]> {
+  return client.get<Content[]>(
     `/api/v1/content/${encodeURIComponent(schemaName)}?limit=${limit}&offset=${offset}`,
   );
 }
