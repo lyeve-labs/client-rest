@@ -23,8 +23,13 @@ export interface CreateWebhookInput {
 
 export type UpdateWebhookInput = Partial<CreateWebhookInput>;
 
-export function listWebhooks(client: HttpClient): Promise<Webhook[]> {
-  return client.get<Webhook[]>("/api/admin/webhooks");
+export async function listWebhooks(client: HttpClient): Promise<Webhook[]> {
+  // The engine answers with a paginated envelope, not a bare array, so a caller
+  // iterating the result got nothing back for a tenant that had webhooks.
+  const res = await client.get<{ data?: Webhook[] } | Webhook[]>(
+    "/api/admin/webhooks",
+  );
+  return Array.isArray(res) ? res : (res?.data ?? []);
 }
 
 /** Retained as a path-encoding regression fixture - no production caller yet. */

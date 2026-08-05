@@ -2,7 +2,12 @@ import type { HttpClient } from "@lyeve-labs/client";
 import type { APIKey, CreateAPIKeyResponse } from "@lyeve-labs/client";
 
 export async function listAPIKeys(client: HttpClient): Promise<APIKey[]> {
-  return client.get<APIKey[]>("/api/admin/api-keys");
+  // The engine answers with a paginated envelope, not a bare array. Typing this
+  // as APIKey[] made every caller crash on .map/.length.
+  const res = await client.get<{ data?: APIKey[] } | APIKey[]>(
+    "/api/admin/api-keys",
+  );
+  return Array.isArray(res) ? res : (res?.data ?? []);
 }
 
 export async function createAPIKey(
