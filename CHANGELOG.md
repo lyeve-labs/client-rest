@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Collection reads went through a single envelope unwrap. `listAPIKeys`, `listWebhooks`, `listIncomingWebhooks`, `listTenants`, the three OAuth provider reads and `search` each assumed one of the two shapes the engine answers with (`{data,limit,offset,total_count}` or a bare array). The mismatched half returned an empty list from a request that had succeeded, so nothing threw and the page simply rendered nothing. `unwrapList`/`getList` in `envelope.ts` now accept both.
+
 ## [0.1.3] - 2026-08-04
 
 ### Fixed
