@@ -1,10 +1,11 @@
 import type { HttpClient } from "@lyeve-labs/client";
 import type { OAuthProvider } from "@lyeve-labs/client";
+import { getList } from "./envelope.js";
 
 export async function listOAuthProviders(
   client: HttpClient,
 ): Promise<OAuthProvider[]> {
-  return client.get<OAuthProvider[]>("/api/admin/oauth-providers");
+  return getList<OAuthProvider>(client, "/api/admin/oauth-providers");
 }
 
 export async function createOAuthProvider(

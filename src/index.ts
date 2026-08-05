@@ -238,3 +238,7 @@ export {
   updatePersistedQuery,
 } from "./graphql-admin.js";
 export type { PersistedQuery, PersistedQueryInput } from "./graphql-admin.js";
+
+// List-envelope normalisation shared by every collection GET.
+export { unwrapList, getList } from "./envelope.js";
+export type { Paginated } from "./envelope.js";

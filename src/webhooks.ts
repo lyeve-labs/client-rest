@@ -11,6 +11,7 @@ import type {
   GlobalHealthStats,
 } from "@lyeve-labs/client";
 import type { HttpClient } from "@lyeve-labs/client";
+import { getList } from "./envelope.js";
 
 export interface CreateWebhookInput {
   name: string;
@@ -26,10 +27,7 @@ export type UpdateWebhookInput = Partial<CreateWebhookInput>;
 export async function listWebhooks(client: HttpClient): Promise<Webhook[]> {
   // The engine answers with a paginated envelope, not a bare array, so a caller
   // iterating the result got nothing back for a tenant that had webhooks.
-  const res = await client.get<{ data?: Webhook[] } | Webhook[]>(
-    "/api/admin/webhooks",
-  );
-  return Array.isArray(res) ? res : (res?.data ?? []);
+  return getList<Webhook>(client, "/api/admin/webhooks");
 }
 
 /** Retained as a path-encoding regression fixture - no production caller yet. */

@@ -1,4 +1,5 @@
 import type { HttpClient } from "@lyeve-labs/client";
+import { getList } from "./envelope.js";
 
 // Types mirror core-plugin-search plugin/types.go
 
@@ -68,13 +69,6 @@ export interface RankingConfig {
   updated_at: string;
 }
 
-// Envelope written by httpx.Paginated for list endpoints.
-interface Paginated<T> {
-  data: T[];
-  total_count: number;
-  limit: number;
-  offset: number;
-}
 
 /** Run a full-text search via GET /api/admin/search?q=... */
 export function search(q: string, client: HttpClient): Promise<SearchResponse> {
@@ -85,9 +79,7 @@ export function search(q: string, client: HttpClient): Promise<SearchResponse> {
 
 /** Fetch the tenant's synonym groups (paginated envelope). */
 export function listSynonyms(client: HttpClient): Promise<SynonymGroup[]> {
-  return client
-    .get<Paginated<SynonymGroup>>("/api/admin/search/synonyms")
-    .then((r) => r.data ?? []);
+  return getList<SynonymGroup>(client, "/api/admin/search/synonyms");
 }
 
 /** Fetch the ranking config for a schema ("*" = global default). */

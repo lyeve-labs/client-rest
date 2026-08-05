@@ -1,5 +1,6 @@
 import type { HttpClient } from "@lyeve-labs/client";
 import type { IncomingWebhook } from "@lyeve-labs/client";
+import { getList } from "./envelope.js";
 
 export interface IncomingWebhookInput {
   name: string;
@@ -13,7 +14,7 @@ export interface IncomingWebhookInput {
 export async function listIncomingWebhooks(
   client: HttpClient,
 ): Promise<IncomingWebhook[]> {
-  return client.get<IncomingWebhook[]>("/api/admin/incoming-webhooks");
+  return getList<IncomingWebhook>(client, "/api/admin/incoming-webhooks");
 }
 
 /** Retained as a path-encoding regression fixture - no production caller yet. */

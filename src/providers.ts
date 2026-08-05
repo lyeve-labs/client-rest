@@ -1,6 +1,7 @@
 // API client for the LLM provider abstraction layer (core-plugin-provider).
 
 import type { HttpClient } from "@lyeve-labs/client";
+import { getList } from "./envelope.js";
 
 // Domain types (mirror core-plugin-provider JSON tags)
 
@@ -164,19 +165,11 @@ export interface FallbackRule {
   updated_at: string;
 }
 
-/** Envelope written by the backend's httpx.Paginated helper. */
-interface Paginated<T> {
-  data: T[];
-  total_count: number;
-  limit: number;
-  offset: number;
-}
 
 // Provider CRUD
 
 export async function listProviders(client: HttpClient): Promise<Provider[]> {
-  const res = await client.get<Paginated<Provider>>("/api/admin/providers");
-  return res.data ?? [];
+  return getList<Provider>(client, "/api/admin/providers");
 }
 
 export function getProvider(id: string, client: HttpClient): Promise<Provider> {
@@ -211,10 +204,10 @@ export async function listCapabilities(
   id: string,
   client: HttpClient,
 ): Promise<ModelCapability[]> {
-  const res = await client.get<Paginated<ModelCapability>>(
+  return getList<ModelCapability>(
+    client,
     `/api/admin/providers/${encodeURIComponent(id)}/capabilities`,
   );
-  return res.data ?? [];
 }
 
 export function upsertCapability(
@@ -246,8 +239,5 @@ export function getDashboard(client: HttpClient): Promise<DashboardResponse> {
 export async function listFallbackRules(
   client: HttpClient,
 ): Promise<FallbackRule[]> {
-  const res = await client.get<Paginated<FallbackRule>>(
-    "/api/admin/providers/fallback-rules",
-  );
-  return res.data ?? [];
+  return getList<FallbackRule>(client, "/api/admin/providers/fallback-rules");
 }
