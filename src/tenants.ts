@@ -39,7 +39,7 @@ export interface TenantArchive {
 // CRUD
 
 /** GET /api/admin/tenants - list all tenants. Requires super_admin. */
-export function listTenants(
+export async function listTenants(
   client: HttpClient,
   limit?: number,
   offset?: number,
@@ -48,9 +48,18 @@ export function listTenants(
   if (limit !== undefined) params.set("limit", String(limit));
   if (offset !== undefined) params.set("offset", String(offset));
   const qs = params.toString();
-  return client.get<{ items: Tenant[]; total: number }>(
-    `/api/admin/tenants${qs ? `?${qs}` : ""}`,
-  );
+  // The engine answers {data, limit, offset, total_count}. Reading `items` and
+  // `total` off that resolved to undefined, so callers rendered no tenants.
+  const res = await client.get<{
+    data?: Tenant[];
+    items?: Tenant[];
+    total_count?: number;
+    total?: number;
+  }>(`/api/admin/tenants${qs ? `?${qs}` : ""}`);
+  return {
+    items: res.data ?? res.items ?? [],
+    total: res.total_count ?? res.total ?? 0,
+  };
 }
 
 /** GET /api/admin/tenants/{id} - get a single tenant. Requires super_admin. */
