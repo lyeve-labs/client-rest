@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@lyeve-labs/client':
-        specifier: ^0.2.0
-        version: 0.2.2
+        specifier: ^0.3.0
+        version: 0.3.0
       prettier:
         specifier: ^3.4.0
         version: 3.9.6
@@ -336,8 +336,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lyeve-labs/client@0.2.2':
-    resolution: {integrity: sha512-gnFfw4S6WjgStqzqXXa6qAj43hjGUsWf11exdFsZyM161cjjdPMSVM4xFufiDTqQtE/B72XVN5iFe5c9+ql9mQ==}
+  '@lyeve-labs/client@0.3.0':
+    resolution: {integrity: sha512-oCftBQ/zYTzTb9psQi2QZI5/f4eIV2MyVs05aZCpMwRAA9DsE/sCO6UzemM45QeKN7e1AO1V9fty1NwDP0vuxA==}
     engines: {node: '>=20'}
 
   '@publint/pack@0.1.5':
@@ -1046,7 +1046,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lyeve-labs/client@0.2.2': {}
+  '@lyeve-labs/client@0.3.0': {}
 
   '@publint/pack@0.1.5':
     dependencies:
