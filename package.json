@@ -44,7 +44,7 @@
     "format:check": "prettier --check ."
   },
   "peerDependencies": {
-    "@lyeve-labs/client": ">=0.1.0"
+    "@lyeve-labs/client": ">=0.2.1"
   },
   "devDependencies": {
     "@lyeve-labs/client": "^0.3.0",

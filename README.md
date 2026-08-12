@@ -42,7 +42,7 @@ One function per endpoint. No SDK to learn. Just import and call.
 ## Requirements
 
 - **Node 20** or newer
-- **[@lyeve-labs/client](https://www.npmjs.com/package/@lyeve-labs/client)** `>=0.1.0`
+- **[@lyeve-labs/client](https://www.npmjs.com/package/@lyeve-labs/client)** `>=0.2.1`
 
 ## Install
 
