@@ -69,7 +69,6 @@ export interface RankingConfig {
   updated_at: string;
 }
 
-
 /** Run a full-text search via GET /api/admin/search?q=... */
 export function search(q: string, client: HttpClient): Promise<SearchResponse> {
   return client.get<SearchResponse>(

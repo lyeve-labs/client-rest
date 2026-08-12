@@ -165,7 +165,6 @@ export interface FallbackRule {
   updated_at: string;
 }
 
-
 // Provider CRUD
 
 export async function listProviders(client: HttpClient): Promise<Provider[]> {
