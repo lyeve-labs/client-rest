@@ -1,6 +1,6 @@
 import type { HttpClient } from "@lyeve-labs/client";
 
-// Response shapes - mirror core-plugin-apianalytics/plugin/types.go
+// Response shapes - mirror lyeve-plugin-apianalytics/plugin/types.go
 
 /** Optional filters accepted by every metrics query endpoint. */
 export interface MetricsQuery {
