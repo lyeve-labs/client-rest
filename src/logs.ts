@@ -1,6 +1,6 @@
 import type { HttpClient } from "@lyeve-labs/client";
 
-// Types mirror the core-plugin-logging JSON shapes.
+// Types mirror the lyeve-plugin-logging JSON shapes.
 
 /** A single log entry returned by the search endpoint. */
 export interface LogEntry {

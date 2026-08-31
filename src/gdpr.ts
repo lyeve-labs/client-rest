@@ -13,7 +13,7 @@ export interface DsarExportError {
   error: string;
 }
 
-/** Merged export result across all plugins (backend: cmscore.SubjectExportResult). */
+/** Merged export result across all plugins (backend: core.SubjectExportResult). */
 export interface DsarExportResult {
   identifier: string;
   plugins: Record<string, unknown>;
