@@ -220,10 +220,12 @@ describe("REST content - relations", () => {
 
 describe("REST content - cursor pagination", () => {
   it("listContentCursor(schema, client, cursor, limit) builds cursor URL", async () => {
+    // The route answers {"data": [...], "next_cursor": "..."} and sends no
+    // total. The fixture used to send items and a total, which is the shape
+    // the client wanted rather than the one it receives.
     const { client, fetchFn } = mkClient({
-      items: [{ id: "e1" }, { id: "e2" }],
+      data: [{ id: "e1" }, { id: "e2" }],
       next_cursor: "cursor-abc",
-      total: 2,
     });
     const page = await listContentCursor("articles", client, "cursor-abc", 10);
     expect(page.items).toHaveLength(2);
