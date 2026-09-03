@@ -16,8 +16,8 @@ export interface ContentRelation {
 
 export interface CursorPage {
   items: Content[];
+  /** Present when more pages are available. */
   next_cursor?: string;
-  total: number;
 }
 
 /**
@@ -25,7 +25,7 @@ export interface CursorPage {
  *
  * Returns a bare array, not a page envelope: the offset endpoint responds with
  * the entries alone and carries no total. Use listContentCursor when you need
- * a total or a next-page token.
+ * a next-page token.
  */
 export function listContent(
   schemaName: string,
@@ -39,7 +39,7 @@ export function listContent(
 }
 
 /** GET /api/v1/content/{schema}/cursor - cursor-based pagination. */
-export function listContentCursor(
+export async function listContentCursor(
   schemaName: string,
   client: HttpClient,
   cursor?: string,
@@ -47,9 +47,12 @@ export function listContentCursor(
 ): Promise<CursorPage> {
   const params = new URLSearchParams({ limit: String(limit) });
   if (cursor) params.set("cursor", cursor);
-  return client.get<CursorPage>(
+  // The route answers {"data": [...], "next_cursor": "..."} and sends no total.
+  // Mapped here rather than exposed raw, so callers keep one page shape.
+  const page = await client.get<{ data?: Content[]; next_cursor?: string }>(
     `/api/v1/content/${encodeURIComponent(schemaName)}/cursor?${params}`,
   );
+  return { items: page.data ?? [], next_cursor: page.next_cursor };
 }
 
 /** GET /api/v1/content/{schema}/{id} - single entry. */
