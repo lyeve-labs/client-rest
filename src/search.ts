@@ -1,7 +1,7 @@
 import type { HttpClient } from "@lyeve-labs/client";
 import { getList } from "./envelope.js";
 
-// Types mirror core-plugin-search plugin/types.go
+// Types mirror lyeve-plugin-search plugin/types.go
 
 /** A single hit in a full-text search response. */
 export interface SearchResult {

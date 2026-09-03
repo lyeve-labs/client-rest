@@ -1,9 +1,9 @@
-// API client for the LLM provider abstraction layer (core-plugin-provider).
+// API client for the LLM provider abstraction layer (lyeve-plugin-provider).
 
 import type { HttpClient } from "@lyeve-labs/client";
 import { getList } from "./envelope.js";
 
-// Domain types (mirror core-plugin-provider JSON tags)
+// Domain types (mirror lyeve-plugin-provider JSON tags)
 
 export type ProviderType =
   "openai" | "anthropic" | "google" | "ollama" | "groq" | "deepseek";
