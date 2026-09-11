@@ -4,6 +4,14 @@
   "description": "REST API client for the LyEve Core - typed fetch functions for all admin and content endpoints",
   "license": "MIT",
   "author": "LyEve <info@lyeve.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lyeve-labs/client-rest.git"
+  },
+  "homepage": "https://github.com/lyeve-labs/client-rest#readme",
+  "bugs": {
+    "url": "https://github.com/lyeve-labs/client-rest/issues"
+  },
   "type": "module",
   "packageManager": "pnpm@11.25.0",
   "engines": {
