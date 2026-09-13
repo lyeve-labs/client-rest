@@ -23,6 +23,12 @@ export function deleteSchema(name: string, client: HttpClient): Promise<void> {
 export interface SchemaStats {
   rows: number;
   table: string;
+  /**
+   * When a row of the calling tenant's last changed: the newest updated_at,
+   * or created_at where the table has no updated_at. Null when the table
+   * holds no rows. Absent from engines that predate the field.
+   */
+  last_updated?: string | null;
 }
 
 /** Retained as a path-encoding regression fixture - no production caller yet. */
