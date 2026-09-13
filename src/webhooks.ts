@@ -110,8 +110,15 @@ export function retryDelivery(
 
 // Dead letter queue
 
-/** List dead letter entries with optional status filter. Requires admin. */
-export function listDeadLetters(
+/**
+ * List dead letter entries with optional status filter. Requires admin.
+ *
+ * The engine answers its standard envelope, `data` and `total_count`. This
+ * used to return that envelope under a type that named `items` and `total`,
+ * so every caller reading the promised keys got an empty list against a
+ * populated queue. The envelope is normalised here, the way listTenants does.
+ */
+export async function listDeadLetters(
   client: HttpClient,
   status?: string,
   limit = 50,
@@ -122,9 +129,20 @@ export function listDeadLetters(
     offset: String(offset),
   });
   if (status) params.set("status", status);
-  return client.get<PaginatedResponse<DeadLetter>>(
-    `/api/admin/webhook-dead-letters?${params}`,
-  );
+  const res = await client.get<{
+    data?: DeadLetter[] | null;
+    items?: DeadLetter[] | null;
+    total_count?: number;
+    total?: number;
+    limit?: number;
+    offset?: number;
+  }>(`/api/admin/webhook-dead-letters?${params}`);
+  return {
+    items: res.data ?? res.items ?? [],
+    total: res.total_count ?? res.total ?? 0,
+    limit: res.limit ?? limit,
+    offset: res.offset ?? offset,
+  };
 }
 
 /** Get a single dead letter entry. Requires admin. */
