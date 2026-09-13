@@ -73,4 +73,23 @@ describe("REST schemas", () => {
     expect(stats).toEqual({ rows: 42, table: "articles" });
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/schemas/articles/stats");
   });
+
+  it("getSchemaStats carries last_updated through, null and absent alike", async () => {
+    const dated = mkClient({
+      rows: 1,
+      table: "a",
+      last_updated: "2026-09-13T08:00:00Z",
+    });
+    expect((await getSchemaStats("a", dated.client)).last_updated).toBe(
+      "2026-09-13T08:00:00Z",
+    );
+
+    const empty = mkClient({ rows: 0, table: "a", last_updated: null });
+    expect((await getSchemaStats("a", empty.client)).last_updated).toBeNull();
+
+    const older = mkClient({ rows: 3, table: "a" });
+    expect(
+      (await getSchemaStats("a", older.client)).last_updated,
+    ).toBeUndefined();
+  });
 });

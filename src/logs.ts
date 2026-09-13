@@ -70,6 +70,8 @@ export interface LogSearchParams {
   query?: string;
   level?: string;
   limit?: number;
+  /** Rows to skip; the engine pages by limit and offset. */
+  offset?: number;
 }
 
 /** GET /api/admin/logs/search - full-text + level filtered search. */
@@ -81,6 +83,7 @@ export function searchLogs(
   if (params.query) qs.set("query", params.query);
   if (params.level) qs.set("level", params.level);
   qs.set("limit", String(params.limit ?? 100));
+  if (params.offset) qs.set("offset", String(params.offset));
   return client.get<LogSearchResponse>(
     `/api/admin/logs/search?${qs.toString()}`,
   );
