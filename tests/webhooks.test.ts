@@ -174,7 +174,12 @@ describe("REST webhooks - dead letter queue", () => {
       offset: 0,
     });
     const result = await listDeadLetters(client, "pending", 10, 0);
-    expect(result.data).toHaveLength(1);
+    // The engine sends data and total_count; the helper promises items and
+    // total, and a caller reading the promised keys has to find the rows.
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0].id).toBe("dl1");
+    expect(result.total).toBe(1);
+    expect(result.limit).toBe(10);
     const url = fetchFn.mock.calls[0][0] as string;
     expect(url).toContain("/api/admin/webhook-dead-letters?");
     expect(url).toContain("limit=10");
