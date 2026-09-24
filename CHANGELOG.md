@@ -19,9 +19,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `listPersistedQueries` and `createPersistedQuery` call
+  `/api/admin/graphql/persisted-queries/`. The server registers the persisted
+  query routes under that prefix with a wildcard, so the bare path they used
+  answered 404. `listPersistedQueries` returns the server's
+  `{ data, total, limit, offset }` envelope and takes optional `search`,
+  `limit` and `offset`. `PersistedQuery` and `PersistedQueryInput` carry the
+  fields the server sends and reads (`query_hash`, `query`, `operation_name`,
+  `description`, `enabled`) instead of `id`, `name` and `variables`, which it
+  never had.
 - The README examples compile against the exported API, the declared Node
   floor reads 24, and the argument order of the functions that take optional
   arguments after the `HttpClient` is listed.
+
+### Added
+
+- `getPersistedQuery` and `togglePersistedQuery`, for the two routes the
+  server serves that the client did not reach.
+
+### Deprecated
+
+- `updatePersistedQuery`. The server has no route that edits a persisted
+  query, so it always fails with 405. A query is keyed by the hash of its
+  text: store the new text and delete the old entry.
 
 ## [0.2.3] - 2026-09-12
 

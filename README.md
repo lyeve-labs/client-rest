@@ -115,7 +115,7 @@ const health = await getWebhookHealth("webhook-id", client);
 | gdpr              | exportSubject, eraseSubject                                                                                                                                                                                                                                                                  |
 | apianalytics      | getSummary, getEndpoints, getTenants, getMethods, getAgents, getTrend, getAnomalies                                                                                                                                                                                                          |
 | tenants           | listTenants, getTenant, createTenant, updateTenant, deleteTenant, archiveTenant, restoreTenant, archiveToColdStorage, listTenantArchives, restoreFromArchive                                                                                                                                 |
-| graphql-admin     | listPersistedQueries, createPersistedQuery, deletePersistedQuery, updatePersistedQuery                                                                                                                                                                                                       |
+| graphql-admin     | listPersistedQueries, getPersistedQuery, createPersistedQuery, deletePersistedQuery, togglePersistedQuery                                                                                                                                                                                    |
 
 Every function takes an `HttpClient` after its required arguments. Optional
 arguments follow it: `listContent(schema, client, limit, offset)`,

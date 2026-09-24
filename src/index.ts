@@ -202,11 +202,19 @@ export type {
 // GraphQL persisted queries (admin CRUD)
 export {
   listPersistedQueries,
+  getPersistedQuery,
   createPersistedQuery,
   deletePersistedQuery,
+  togglePersistedQuery,
   updatePersistedQuery,
 } from "./graphql-admin.js";
-export type { PersistedQuery, PersistedQueryInput } from "./graphql-admin.js";
+export type {
+  PersistedQuery,
+  PersistedQueryInput,
+  PersistedQueryList,
+  PersistedQueryListParams,
+  PersistedQueryToggle,
+} from "./graphql-admin.js";
 
 // List-envelope normalisation shared by every collection GET.
 export { unwrapList, getList } from "./envelope.js";
