@@ -15,6 +15,7 @@ export type {
   AuthResponse,
   MFAChallengeResponse,
   LoginResponse,
+  SetupStatus,
   TokenResponse,
 } from "./auth.js";
 
