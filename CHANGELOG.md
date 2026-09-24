@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** `setup(email, password, setupToken, client)` takes the engine's
+  setup token as its third argument and sends it as `setup_token`. The engine
+  creates the first super admin only for a caller holding that token (its
+  `LYEVE_SETUP_TOKEN`, or the one-time token it logs at boot) and answers
+  401 otherwise, so the old three-argument call can no longer succeed. Callers
+  add the token; nothing else about the response changes. Release this in the
+  next minor version.
+- `getSetupStatus` returns `SetupStatus`, which adds the optional
+  `token_source` (`"env"` or `"log"`) the engine reports while setup is open.
+
 ### Removed
 
 - The `providers` module: `listProviders`, `getProvider`, `createProvider`,
