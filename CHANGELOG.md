@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Removed
+
+- The `providers` module: `listProviders`, `getProvider`, `createProvider`,
+  `updateProvider`, `deleteProvider`, `listCapabilities`, `upsertCapability`,
+  `getMetrics`, `getDashboard`, `listFallbackRules`, `PROVIDER_TYPES`,
+  `CAPABILITIES` and their types. Every one of them called
+  `/api/admin/providers*`, which the engine no longer serves, so each call
+  answered 404. AI provider configuration lives under `/api/admin/ai/providers`,
+  served by the AI plugin.
+
+### Fixed
+
+- The README examples compile against the exported API, the declared Node
+  floor reads 24, and the argument order of the functions that take optional
+  arguments after the `HttpClient` is listed.
+
 ## [0.2.3] - 2026-09-12
 
 ### Fixed

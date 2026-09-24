@@ -157,37 +157,6 @@ export type {
   AnomalyResponse,
 } from "./apianalytics.js";
 
-export {
-  listProviders,
-  getProvider,
-  createProvider,
-  updateProvider,
-  deleteProvider,
-  listCapabilities,
-  upsertCapability,
-  getMetrics,
-  getDashboard,
-  listFallbackRules,
-  PROVIDER_TYPES,
-  CAPABILITIES,
-} from "./providers.js";
-export type {
-  ProviderType,
-  Provider,
-  CreateProviderInput,
-  UpdateProviderInput,
-  Capability,
-  ModelCapability,
-  UpsertCapabilityInput,
-  ProviderMetric,
-  MetricsListResult,
-  CostByProvider,
-  LatencyByModel,
-  DashboardResponse,
-  FallbackRule,
-  FallbackCondition,
-} from "./providers.js";
-
 // Content API (moved from content/ - same HttpClient pattern)
 export {
   listContent,
