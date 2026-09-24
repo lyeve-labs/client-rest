@@ -2,59 +2,109 @@ import type { HttpClient } from "@lyeve-labs/client";
 
 // Types
 
+/** A persisted query as the GraphQL plugin stores it, keyed by the SHA-256 of its text. */
 export interface PersistedQuery {
-  id: string;
-  name: string;
+  query_hash: string;
   query: string;
-  variables?: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
+  operation_name: string;
+  description: string;
+  enabled: boolean;
+  auto_registered?: boolean;
 }
 
 export interface PersistedQueryInput {
-  name: string;
   query: string;
-  variables?: Record<string, unknown>;
+  operation_name?: string;
+  description?: string;
+}
+
+export interface PersistedQueryListParams {
+  search?: string;
+  /** 1 to 200; the server uses 50 outside that range. */
+  limit?: number;
+  offset?: number;
+}
+
+export interface PersistedQueryList {
+  data: PersistedQuery[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface PersistedQueryToggle {
+  query_hash: string;
+  enabled: boolean;
+}
+
+// The plugin registers its admin routes under this prefix with a wildcard, so
+// the collection is addressed with a trailing slash; the bare prefix is not a
+// route and answers 404.
+const collection = "/api/admin/graphql/persisted-queries/";
+
+function itemPath(hash: string): string {
+  return `${collection}${encodeURIComponent(hash)}`;
 }
 
 // CRUD
 
-/** GET /api/admin/graphql/persisted-queries - list persisted queries. Requires admin. */
+/** GET /api/admin/graphql/persisted-queries/ - list persisted queries. Requires admin. */
 export function listPersistedQueries(
   client: HttpClient,
-): Promise<PersistedQuery[]> {
-  return client.get<PersistedQuery[]>("/api/admin/graphql/persisted-queries");
+  params: PersistedQueryListParams = {},
+): Promise<PersistedQueryList> {
+  const qs = new URLSearchParams();
+  if (params.search) qs.set("search", params.search);
+  if (params.limit !== undefined) qs.set("limit", String(params.limit));
+  if (params.offset !== undefined) qs.set("offset", String(params.offset));
+  const query = qs.toString();
+  return client.get<PersistedQueryList>(
+    query ? `${collection}?${query}` : collection,
+  );
 }
 
-/** POST /api/admin/graphql/persisted-queries - create a persisted query. Requires admin. */
+/** GET /api/admin/graphql/persisted-queries/{hash} - read one persisted query. Requires admin. */
+export function getPersistedQuery(
+  hash: string,
+  client: HttpClient,
+): Promise<PersistedQuery> {
+  return client.get<PersistedQuery>(itemPath(hash));
+}
+
+/** POST /api/admin/graphql/persisted-queries/ - store a query in the allowlist. Requires admin. */
 export function createPersistedQuery(
   input: PersistedQueryInput,
   client: HttpClient,
 ): Promise<PersistedQuery> {
-  return client.post<PersistedQuery>(
-    "/api/admin/graphql/persisted-queries",
-    input,
-  );
+  return client.post<PersistedQuery>(collection, input);
 }
 
-/** DELETE /api/admin/graphql/persisted-queries/{id} - delete a persisted query. */
+/** DELETE /api/admin/graphql/persisted-queries/{hash} - delete a persisted query. */
 export function deletePersistedQuery(
-  id: string,
+  hash: string,
   client: HttpClient,
 ): Promise<void> {
-  return client.delete<void>(
-    `/api/admin/graphql/persisted-queries/${encodeURIComponent(id)}`,
-  );
+  return client.delete<void>(itemPath(hash));
 }
 
-/** PATCH /api/admin/graphql/persisted-queries/{id} - update a persisted query. */
+/** PATCH /api/admin/graphql/persisted-queries/{hash}/toggle - flip a persisted query between enabled and disabled. */
+export function togglePersistedQuery(
+  hash: string,
+  client: HttpClient,
+): Promise<PersistedQueryToggle> {
+  return client.patch<PersistedQueryToggle>(`${itemPath(hash)}/toggle`, {});
+}
+
+/**
+ * @deprecated The server has no route that edits a persisted query, so this
+ * call always fails with 405. A query's hash is its text, so store the new
+ * text with {@link createPersistedQuery} and delete the old one, or use
+ * {@link togglePersistedQuery} to enable or disable it.
+ */
 export function updatePersistedQuery(
-  id: string,
+  hash: string,
   input: Partial<PersistedQueryInput>,
   client: HttpClient,
 ): Promise<PersistedQuery> {
-  return client.patch<PersistedQuery>(
-    `/api/admin/graphql/persisted-queries/${encodeURIComponent(id)}`,
-    input,
-  );
+  return client.patch<PersistedQuery>(itemPath(hash), input);
 }
