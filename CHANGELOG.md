@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `SetupStatus` declares `mode`, which an engine in setup mode reports as
+  `"setup"`, and the `updateContent` doc says it is a partial update: only
+  the fields sent are written and validated.
 - `listPersistedQueries` and `createPersistedQuery` call
   `/api/admin/graphql/persisted-queries/`. The server registers the persisted
   query routes under that prefix with a wildcard, so the bare path they used

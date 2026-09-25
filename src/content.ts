@@ -90,7 +90,11 @@ export function bulkCreateContent(
   );
 }
 
-/** PUT /api/v1/content/{schema}/{id} - update an entry. */
+/**
+ * PUT /api/v1/content/{schema}/{id} - a partial update: only the fields in
+ * data are written and validated, and every other field keeps its stored
+ * value.
+ */
 export function updateContent(
   schemaName: string,
   id: string,
