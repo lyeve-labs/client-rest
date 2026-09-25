@@ -30,6 +30,12 @@ export interface SetupStatus {
    * at boot. Absent once setup is complete or when no token is available.
    */
   token_source?: "env" | "log";
+  /**
+   * "setup" while the engine runs in setup mode because required settings
+   * are missing. It then serves only this route, the setup mode status read
+   * and its probes. Absent on an engine that booted normally.
+   */
+  mode?: "setup";
 }
 
 export function getSetupStatus(client: HttpClient): Promise<SetupStatus> {
