@@ -217,6 +217,6 @@ export type {
   PersistedQueryToggle,
 } from "./graphql-admin.js";
 
-// List-envelope normalisation shared by every collection GET.
+// List-envelope normalization shared by every collection GET.
 export { unwrapList, getList } from "./envelope.js";
 export type { Paginated } from "./envelope.js";

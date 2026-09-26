@@ -116,7 +116,7 @@ export function retryDelivery(
  * The engine answers its standard envelope, `data` and `total_count`. This
  * used to return that envelope under a type that named `items` and `total`,
  * so every caller reading the promised keys got an empty list against a
- * populated queue. The envelope is normalised here, the way listTenants does.
+ * populated queue. The envelope is normalized here, the way listTenants does.
  */
 export async function listDeadLetters(
   client: HttpClient,
