@@ -70,7 +70,7 @@ export interface LogSearchParams {
   query?: string;
   level?: string;
   limit?: number;
-  /** Rows to skip; the engine pages by limit and offset. */
+  /** Rows to skip. The engine pages by limit and offset. */
   offset?: number;
 }
 
