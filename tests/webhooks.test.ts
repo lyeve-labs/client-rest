@@ -174,7 +174,7 @@ describe("REST webhooks - dead letter queue", () => {
       offset: 0,
     });
     const result = await listDeadLetters(client, "pending", 10, 0);
-    // The engine sends data and total_count; the helper promises items and
+    // The engine sends data and total_count. The helper promises items and
     // total, and a caller reading the promised keys has to find the rows.
     expect(result.items).toHaveLength(1);
     expect(result.items[0].id).toBe("dl1");

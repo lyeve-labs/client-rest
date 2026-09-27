@@ -20,7 +20,7 @@ export interface PersistedQueryInput {
 
 export interface PersistedQueryListParams {
   search?: string;
-  /** 1 to 200; the server uses 50 outside that range. */
+  /** 1 to 200. The server uses 50 outside that range. */
   limit?: number;
   offset?: number;
 }
@@ -38,7 +38,7 @@ export interface PersistedQueryToggle {
 }
 
 // The plugin registers its admin routes under this prefix with a wildcard, so
-// the collection is addressed with a trailing slash; the bare prefix is not a
+// the collection is addressed with a trailing slash. The bare prefix is not a
 // route and answers 404.
 const collection = "/api/admin/graphql/persisted-queries/";
 
