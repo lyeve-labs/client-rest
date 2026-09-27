@@ -38,7 +38,7 @@ export interface TenantArchive {
 
 // CRUD
 
-/** GET /api/admin/tenants - list all tenants. Requires super_admin. */
+/** GET /api/admin/tenants: list all tenants. Requires super_admin. */
 export async function listTenants(
   client: HttpClient,
   limit?: number,
@@ -67,7 +67,7 @@ export function getTenant(id: string, client: HttpClient): Promise<Tenant> {
   return client.get<Tenant>(`/api/admin/tenants/${encodeURIComponent(id)}`);
 }
 
-/** POST /api/admin/tenants - create a new tenant. Requires super_admin. */
+/** POST /api/admin/tenants: create a new tenant. Requires super_admin. */
 export function createTenant(
   input: CreateTenantInput,
   client: HttpClient,
@@ -94,7 +94,7 @@ export function deleteTenant(id: string, client: HttpClient): Promise<void> {
 
 // Lifecycle
 
-/** POST /api/admin/tenants/{id}/archive - mark tenant read-only. Requires super_admin. */
+/** POST /api/admin/tenants/{id}/archive: mark tenant read-only. Requires super_admin. */
 export function archiveTenant(id: string, client: HttpClient): Promise<Tenant> {
   return client.post<Tenant>(
     `/api/admin/tenants/${encodeURIComponent(id)}/archive`,
@@ -102,7 +102,7 @@ export function archiveTenant(id: string, client: HttpClient): Promise<Tenant> {
   );
 }
 
-/** POST /api/admin/tenants/{id}/restore - un-archive a tenant. Requires super_admin. */
+/** POST /api/admin/tenants/{id}/restore: un-archive a tenant. Requires super_admin. */
 export function restoreTenant(id: string, client: HttpClient): Promise<Tenant> {
   return client.post<Tenant>(
     `/api/admin/tenants/${encodeURIComponent(id)}/restore`,
@@ -110,7 +110,7 @@ export function restoreTenant(id: string, client: HttpClient): Promise<Tenant> {
   );
 }
 
-/** POST /api/admin/tenants/{id}/cold-archive - export to cold storage. Requires super_admin. */
+/** POST /api/admin/tenants/{id}/cold-archive: export to cold storage. Requires super_admin. */
 export function archiveToColdStorage(
   id: string,
   client: HttpClient,
@@ -121,7 +121,7 @@ export function archiveToColdStorage(
   );
 }
 
-/** GET /api/admin/tenants/{id}/archives - list cold storage archives. Requires super_admin. */
+/** GET /api/admin/tenants/{id}/archives: list cold storage archives. Requires super_admin. */
 export function listTenantArchives(
   id: string,
   client: HttpClient,
@@ -131,7 +131,7 @@ export function listTenantArchives(
   );
 }
 
-/** POST /api/admin/tenants/{id}/archives/{archiveId}/restore - restore from cold storage. */
+/** POST /api/admin/tenants/{id}/archives/{archiveId}/restore: restore from cold storage. */
 export function restoreFromArchive(
   id: string,
   archiveId: string,
