@@ -30,7 +30,7 @@ export interface DsarEraseResult {
 
 /**
  * Export all PII held for a data subject across every plugin.
- * The backend body field is `identifier`; `super_admin` role required.
+ * The backend body field is `identifier`. `super_admin` role required.
  */
 export function exportSubject(
   subject: string,
@@ -43,7 +43,7 @@ export function exportSubject(
 
 /**
  * Erase/anonymize all PII held for a data subject across every plugin.
- * The backend body field is `identifier`; `super_admin` role required.
+ * The backend body field is `identifier`. `super_admin` role required.
  */
 export function eraseSubject(
   subject: string,
