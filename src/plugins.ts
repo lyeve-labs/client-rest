@@ -154,7 +154,7 @@ export function safeUpgradePlugin(
 
 /**
  * Fetch a plugin's changelog. The endpoint responds with `text/markdown`
- * rather than JSON, so it cannot go through the shared JSON client - pass an
+ * rather than JSON, so it cannot go through the shared JSON client: pass an
  * (optionally auth-wrapped) fetch function. Returns '' when no changelog exists.
  */
 export async function getChangelog(

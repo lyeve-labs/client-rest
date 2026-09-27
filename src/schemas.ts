@@ -31,7 +31,7 @@ export interface SchemaStats {
   last_updated?: string | null;
 }
 
-/** Retained as a path-encoding regression fixture - no production caller yet. */
+/** Retained as a path-encoding regression fixture: no production caller yet. */
 export function getSchemaStats(
   name: string,
   client: HttpClient,
