@@ -87,7 +87,7 @@ export function deletePersistedQuery(
   return client.delete<void>(itemPath(hash));
 }
 
-/** PATCH /api/admin/graphql/persisted-queries/{hash}/toggle - flip a persisted query between enabled and disabled. */
+/** PATCH /api/admin/graphql/persisted-queries/{hash}/toggle: flip a persisted query between enabled and disabled. */
 export function togglePersistedQuery(
   hash: string,
   client: HttpClient,

@@ -1,6 +1,6 @@
 import type { HttpClient } from "@lyeve-labs/client";
 
-// Response shapes - mirror lyeve-plugin-apianalytics/plugin/types.go
+// Response shapes: mirror lyeve-plugin-apianalytics/plugin/types.go
 
 /** Optional filters accepted by every metrics query endpoint. */
 export interface MetricsQuery {
@@ -106,7 +106,7 @@ function qs(query?: MetricsQuery): string {
   return s ? `?${s}` : "";
 }
 
-/** GET /metrics/summary - rolled-up totals for the range. */
+/** GET /metrics/summary: rolled-up totals for the range. */
 export function getSummary(
   query: MetricsQuery | undefined,
   client: HttpClient,
@@ -114,7 +114,7 @@ export function getSummary(
   return client.get<Summary>(`${BASE}/summary${qs(query)}`);
 }
 
-/** GET /metrics/endpoints - request volume/error/latency grouped by endpoint. */
+/** GET /metrics/endpoints: request volume/error/latency grouped by endpoint. */
 export function getEndpoints(
   query: MetricsQuery | undefined,
   client: HttpClient,
@@ -122,7 +122,7 @@ export function getEndpoints(
   return client.get<BreakdownResponse>(`${BASE}/endpoints${qs(query)}`);
 }
 
-/** GET /metrics/tenants - grouped by tenant (super_admin sees all tenants). */
+/** GET /metrics/tenants: grouped by tenant (super_admin sees all tenants). */
 export function getTenants(
   query: MetricsQuery | undefined,
   client: HttpClient,
@@ -130,7 +130,7 @@ export function getTenants(
   return client.get<BreakdownResponse>(`${BASE}/tenants${qs(query)}`);
 }
 
-/** GET /metrics/methods - grouped by HTTP method. */
+/** GET /metrics/methods: grouped by HTTP method. */
 export function getMethods(
   query: MetricsQuery | undefined,
   client: HttpClient,
@@ -138,7 +138,7 @@ export function getMethods(
   return client.get<BreakdownResponse>(`${BASE}/methods${qs(query)}`);
 }
 
-/** GET /metrics/agents - grouped by user-agent family. */
+/** GET /metrics/agents: grouped by user-agent family. */
 export function getAgents(
   query: MetricsQuery | undefined,
   client: HttpClient,
@@ -146,7 +146,7 @@ export function getAgents(
   return client.get<BreakdownResponse>(`${BASE}/agents${qs(query)}`);
 }
 
-/** GET /metrics/trend - hourly time-series. */
+/** GET /metrics/trend: hourly time-series. */
 export function getTrend(
   query: MetricsQuery | undefined,
   client: HttpClient,
@@ -154,7 +154,7 @@ export function getTrend(
   return client.get<TrendResponse>(`${BASE}/trend${qs(query)}`);
 }
 
-/** GET /metrics/anomalies - detected anomalous hours. */
+/** GET /metrics/anomalies: detected anomalous hours. */
 export function getAnomalies(
   query: MetricsQuery | undefined,
   client: HttpClient,

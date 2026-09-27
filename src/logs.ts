@@ -74,7 +74,7 @@ export interface LogSearchParams {
   offset?: number;
 }
 
-/** GET /api/admin/logs/search - full-text + level filtered search. */
+/** GET /api/admin/logs/search: full-text + level filtered search. */
 export function searchLogs(
   client: HttpClient,
   params: LogSearchParams = {},
@@ -89,19 +89,19 @@ export function searchLogs(
   );
 }
 
-/** GET /api/admin/logging/levels - current per-tenant/per-plugin log levels. */
+/** GET /api/admin/logging/levels: current per-tenant/per-plugin log levels. */
 export function getLoggingLevels(
   client: HttpClient,
 ): Promise<LogLevelSnapshot> {
   return client.get<LogLevelSnapshot>("/api/admin/logging/levels");
 }
 
-/** GET /api/admin/logging/config - full logging configuration. */
+/** GET /api/admin/logging/config: full logging configuration. */
 export function getLoggingConfig(client: HttpClient): Promise<LogConfig> {
   return client.get<LogConfig>("/api/admin/logging/config");
 }
 
-/** GET /api/admin/logging/volume - log volume stats for a window (default 1h). */
+/** GET /api/admin/logging/volume: log volume stats for a window (default 1h). */
 export function getLogVolume(
   client: HttpClient,
   window = "1h",

@@ -17,7 +17,7 @@ export async function listIncomingWebhooks(
   return getList<IncomingWebhook>(client, "/api/admin/incoming-webhooks");
 }
 
-/** Retained as a path-encoding regression fixture - no production caller yet. */
+/** Retained as a path-encoding regression fixture: no production caller yet. */
 export async function getIncomingWebhook(
   id: string,
   client: HttpClient,
