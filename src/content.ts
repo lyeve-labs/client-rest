@@ -38,7 +38,7 @@ export function listContent(
   );
 }
 
-/** GET /api/v1/content/{schema}/cursor - cursor-based pagination. */
+/** GET /api/v1/content/{schema}/cursor: cursor-based pagination. */
 export async function listContentCursor(
   schemaName: string,
   client: HttpClient,
@@ -78,7 +78,7 @@ export function createContent(
   );
 }
 
-/** POST /api/v1/content/{schema}/bulk - bulk create entries. */
+/** POST /api/v1/content/{schema}/bulk: bulk create entries. */
 export function bulkCreateContent(
   schemaName: string,
   items: Record<string, unknown>[],
@@ -118,7 +118,7 @@ export function deleteContent(
   );
 }
 
-/** PUT /api/v1/content/{schema}/{id}/publish - publish a draft entry. */
+/** PUT /api/v1/content/{schema}/{id}/publish: publish a draft entry. */
 export function publishContent(
   schemaName: string,
   id: string,
@@ -130,7 +130,7 @@ export function publishContent(
   );
 }
 
-/** PUT /api/v1/content/{schema}/{id}/unpublish - unpublish an entry. */
+/** PUT /api/v1/content/{schema}/{id}/unpublish: unpublish an entry. */
 export function unpublishContent(
   schemaName: string,
   id: string,
@@ -142,7 +142,7 @@ export function unpublishContent(
   );
 }
 
-/** GET /api/v1/content/{schema}/{id}/revisions - list revisions. */
+/** GET /api/v1/content/{schema}/{id}/revisions: list revisions. */
 export function listContentRevisions(
   schemaName: string,
   id: string,
@@ -153,7 +153,7 @@ export function listContentRevisions(
   );
 }
 
-/** PUT /api/v1/content/{schema}/{id}/revisions/{revId}/restore - restore a revision. */
+/** PUT /api/v1/content/{schema}/{id}/revisions/{revId}/restore: restore a revision. */
 export function restoreContentRevision(
   schemaName: string,
   id: string,

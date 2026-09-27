@@ -30,7 +30,7 @@ export async function listWebhooks(client: HttpClient): Promise<Webhook[]> {
   return getList<Webhook>(client, "/api/admin/webhooks");
 }
 
-/** Retained as a path-encoding regression fixture - no production caller yet. */
+/** Retained as a path-encoding regression fixture: no production caller yet. */
 export function getWebhook(id: string, client: HttpClient): Promise<Webhook> {
   return client.get<Webhook>(`/api/admin/webhooks/${encodeURIComponent(id)}`);
 }

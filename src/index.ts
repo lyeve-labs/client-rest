@@ -1,4 +1,4 @@
-// REST API - typed fetch functions for all REST endpoints.
+// REST API: typed fetch functions for all REST endpoints.
 // Covers /api/admin/* and /api/v1/* routes.
 // Every function requires an HttpClient as the last parameter (dependency injection).
 
