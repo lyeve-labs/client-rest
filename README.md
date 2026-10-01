@@ -107,7 +107,7 @@ const health = await getWebhookHealth("webhook-id", client);
 | permissions       | listPermissions, upsertPermission, deletePermission                                                                                                                                                                                                                                          |
 | webhooks          | listWebhooks, getWebhook, createWebhook, updateWebhook, deleteWebhook, testWebhook, listDeliveries, rotateSecret, retryDelivery, listDeadLetters, getDeadLetter, replayDeadLetter, dismissDeadLetter, deleteDeadLetter, getRetryConfig, updateRetryConfig, getWebhookHealth, getGlobalHealth |
 | incoming-webhooks | listIncomingWebhooks, getIncomingWebhook, createIncomingWebhook, updateIncomingWebhook, deleteIncomingWebhook                                                                                                                                                                                |
-| plugins           | getPluginStatus, getPluginSchema, getPluginConfig, savePluginConfig, resetPluginConfig, rollbackPlugin, getMigrationCompat, safeUpgradePlugin, getChangelog                                                                                                                                  |
+| plugins           | getPluginStatus, getPluginSchema, getPluginConfig, savePluginConfig, resetPluginConfig                                                                                                                                                                                                       |
 | search            | search, listSynonyms, getRanking                                                                                                                                                                                                                                                             |
 | logs              | searchLogs, getLoggingLevels, getLoggingConfig, getLogVolume                                                                                                                                                                                                                                 |
 | oauth             | listOAuthProviders, createOAuthProvider, updateOAuthProvider, deleteOAuthProvider                                                                                                                                                                                                            |
@@ -120,7 +120,7 @@ const health = await getWebhookHealth("webhook-id", client);
 Every function takes an `HttpClient` after its required arguments. Optional
 arguments follow it: `listContent(schema, client, limit, offset)`,
 `listContentCursor(schema, client, cursor, limit)`, `listDeliveries(id, client, limit)`,
-`rotateSecret(id, client, newSecret)`, `rollbackPlugin(name, client, n)`,
+`rotateSecret(id, client, newSecret)`,
 `listTenants(client, limit, offset)`, `listDeadLetters(client, status, limit, offset)`,
 `searchLogs(client, params)`, `getLogVolume(client, window)` and
 `getRanking(client, schema)`.

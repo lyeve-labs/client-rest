@@ -80,17 +80,14 @@ export {
   getPluginConfig,
   savePluginConfig,
   resetPluginConfig,
-  rollbackPlugin,
-  getMigrationCompat,
-  safeUpgradePlugin,
-  getChangelog,
 } from "./plugins.js";
 export type {
   PluginPhase,
   PluginStatus,
   PluginStatusReport,
-  MigrationCompatibilityResult,
-  RollbackResult,
+  PluginManifest,
+  PluginRoute,
+  PluginRouteGroup,
   JsonSchema,
 } from "./plugins.js";
 
