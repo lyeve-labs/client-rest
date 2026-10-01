@@ -70,9 +70,11 @@ export interface LogSearchParams {
   query?: string;
   level?: string;
   limit?: number;
+  /** Rows to skip. The engine pages by limit and offset. */
+  offset?: number;
 }
 
-/** GET /api/admin/logs/search - full-text + level filtered search. */
+/** GET /api/admin/logs/search: full-text + level filtered search. */
 export function searchLogs(
   client: HttpClient,
   params: LogSearchParams = {},
@@ -81,24 +83,25 @@ export function searchLogs(
   if (params.query) qs.set("query", params.query);
   if (params.level) qs.set("level", params.level);
   qs.set("limit", String(params.limit ?? 100));
+  if (params.offset) qs.set("offset", String(params.offset));
   return client.get<LogSearchResponse>(
     `/api/admin/logs/search?${qs.toString()}`,
   );
 }
 
-/** GET /api/admin/logging/levels - current per-tenant/per-plugin log levels. */
+/** GET /api/admin/logging/levels: current per-tenant/per-plugin log levels. */
 export function getLoggingLevels(
   client: HttpClient,
 ): Promise<LogLevelSnapshot> {
   return client.get<LogLevelSnapshot>("/api/admin/logging/levels");
 }
 
-/** GET /api/admin/logging/config - full logging configuration. */
+/** GET /api/admin/logging/config: full logging configuration. */
 export function getLoggingConfig(client: HttpClient): Promise<LogConfig> {
   return client.get<LogConfig>("/api/admin/logging/config");
 }
 
-/** GET /api/admin/logging/volume - log volume stats for a window (default 1h). */
+/** GET /api/admin/logging/volume: log volume stats for a window (default 1h). */
 export function getLogVolume(
   client: HttpClient,
   window = "1h",

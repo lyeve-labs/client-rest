@@ -59,14 +59,15 @@ describe("REST auth", () => {
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/auth/me");
   });
 
-  it("setup POSTs email and password", async () => {
+  it("setup POSTs email, password and the setup token", async () => {
     const { client, fetchFn } = mkClient({ user: { id: "u1" }, token: "t" });
-    await setup("a@b.co", "pw", client);
+    await setup("a@b.co", "pw", "0123456789abcdef", client);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/setup");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
     expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
       email: "a@b.co",
       password: "pw",
+      setup_token: "0123456789abcdef",
     });
   });
 

@@ -14,7 +14,7 @@ export interface Paginated<T> {
 }
 
 /**
- * Normalises a list response to an array. Accepts the envelope, a bare array,
+ * Normalizes a list response to an array. Accepts the envelope, a bare array,
  * and `null` (which the engine encodes for an empty result rather than `[]`).
  * Use this for every collection GET: some endpoints answer bare arrays and
  * others answer the envelope, and which is which is not knowable at the call
@@ -25,7 +25,7 @@ export function unwrapList<T>(res: Paginated<T> | T[] | null | undefined): T[] {
   return res?.data ?? [];
 }
 
-/** GETs a collection and normalises the response to an array. */
+/** GETs a collection and normalizes the response to an array. */
 export async function getList<T>(
   client: HttpClient,
   path: string,

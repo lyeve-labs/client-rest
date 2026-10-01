@@ -19,6 +19,16 @@ function mkClient(body: unknown = {}) {
 }
 
 describe("REST logs", () => {
+  it("searchLogs sends the offset when given and nothing when not", async () => {
+    const paged = mkClient({ results: [], total: 0, limit: 50, offset: 100 });
+    await searchLogs(paged.client, { limit: 50, offset: 100 });
+    expect(paged.fetchFn.mock.calls[0][0] as string).toContain("offset=100");
+
+    const first = mkClient({ results: [], total: 0, limit: 50, offset: 0 });
+    await searchLogs(first.client, { limit: 50 });
+    expect(first.fetchFn.mock.calls[0][0] as string).not.toContain("offset=");
+  });
+
   it("searchLogs(client, params) GETs /api/admin/logs/search with query params", async () => {
     const { client, fetchFn } = mkClient({
       results: [
