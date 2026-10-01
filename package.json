@@ -57,7 +57,7 @@
     "@lyeve-labs/client": ">=0.2.1"
   },
   "devDependencies": {
-    "@lyeve-labs/client": "^0.3.0",
+    "@lyeve-labs/client": "^0.5.0",
     "tsup": "^8.4.0",
     "typescript": "^5.7.0",
     "vitest": "^2.1.0",
