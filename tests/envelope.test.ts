@@ -6,9 +6,6 @@ import {
   listWebhooks,
   listIncomingWebhooks,
   listOAuthProviders,
-  listProviders,
-  listCapabilities,
-  listFallbackRules,
   listSynonyms,
   listTenants,
 } from "../src/index.js";
@@ -56,9 +53,6 @@ const COLLECTIONS: ReadonlyArray<
   ["listWebhooks", (c) => listWebhooks(c)],
   ["listIncomingWebhooks", (c) => listIncomingWebhooks(c)],
   ["listOAuthProviders", (c) => listOAuthProviders(c)],
-  ["listProviders", (c) => listProviders(c)],
-  ["listCapabilities", (c) => listCapabilities("p1", c)],
-  ["listFallbackRules", (c) => listFallbackRules(c)],
   ["listSynonyms", (c) => listSynonyms(c)],
 ];
 

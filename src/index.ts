@@ -1,4 +1,4 @@
-// REST API - typed fetch functions for all REST endpoints.
+// REST API: typed fetch functions for all REST endpoints.
 // Covers /api/admin/* and /api/v1/* routes.
 // Every function requires an HttpClient as the last parameter (dependency injection).
 
@@ -15,6 +15,7 @@ export type {
   AuthResponse,
   MFAChallengeResponse,
   LoginResponse,
+  SetupStatus,
   TokenResponse,
 } from "./auth.js";
 
@@ -79,17 +80,14 @@ export {
   getPluginConfig,
   savePluginConfig,
   resetPluginConfig,
-  rollbackPlugin,
-  getMigrationCompat,
-  safeUpgradePlugin,
-  getChangelog,
 } from "./plugins.js";
 export type {
   PluginPhase,
   PluginStatus,
   PluginStatusReport,
-  MigrationCompatibilityResult,
-  RollbackResult,
+  PluginManifest,
+  PluginRoute,
+  PluginRouteGroup,
   JsonSchema,
 } from "./plugins.js";
 
@@ -157,37 +155,6 @@ export type {
   AnomalyResponse,
 } from "./apianalytics.js";
 
-export {
-  listProviders,
-  getProvider,
-  createProvider,
-  updateProvider,
-  deleteProvider,
-  listCapabilities,
-  upsertCapability,
-  getMetrics,
-  getDashboard,
-  listFallbackRules,
-  PROVIDER_TYPES,
-  CAPABILITIES,
-} from "./providers.js";
-export type {
-  ProviderType,
-  Provider,
-  CreateProviderInput,
-  UpdateProviderInput,
-  Capability,
-  ModelCapability,
-  UpsertCapabilityInput,
-  ProviderMetric,
-  MetricsListResult,
-  CostByProvider,
-  LatencyByModel,
-  DashboardResponse,
-  FallbackRule,
-  FallbackCondition,
-} from "./providers.js";
-
 // Content API (moved from content/ - same HttpClient pattern)
 export {
   listContent,
@@ -233,12 +200,20 @@ export type {
 // GraphQL persisted queries (admin CRUD)
 export {
   listPersistedQueries,
+  getPersistedQuery,
   createPersistedQuery,
   deletePersistedQuery,
+  togglePersistedQuery,
   updatePersistedQuery,
 } from "./graphql-admin.js";
-export type { PersistedQuery, PersistedQueryInput } from "./graphql-admin.js";
+export type {
+  PersistedQuery,
+  PersistedQueryInput,
+  PersistedQueryList,
+  PersistedQueryListParams,
+  PersistedQueryToggle,
+} from "./graphql-admin.js";
 
-// List-envelope normalisation shared by every collection GET.
+// List-envelope normalization shared by every collection GET.
 export { unwrapList, getList } from "./envelope.js";
 export type { Paginated } from "./envelope.js";

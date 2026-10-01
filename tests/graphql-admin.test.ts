@@ -2,9 +2,10 @@ import { describe, it, expect, vi } from "vitest";
 import { createClient } from "@lyeve-labs/client";
 import {
   listPersistedQueries,
+  getPersistedQuery,
   createPersistedQuery,
   deletePersistedQuery,
-  updatePersistedQuery,
+  togglePersistedQuery,
 } from "../src/index.js";
 
 function mkClient(body: unknown = {}, status = 200) {
@@ -18,58 +19,86 @@ function mkClient(body: unknown = {}, status = 200) {
   return { client: createClient(fetchFn as unknown as typeof fetch), fetchFn };
 }
 
+const record = {
+  query_hash: "ab12",
+  query: "query { content { id } }",
+  operation_name: "GetContent",
+  description: "",
+  enabled: true,
+};
+
+// The GraphQL plugin registers its admin routes as
+// /api/admin/graphql/persisted-queries/* on GET, POST, DELETE and PATCH. The
+// wildcard does not match the bare prefix, so the collection is the prefix
+// with a trailing slash.
 describe("REST GraphQL admin", () => {
-  it("listPersistedQueries GETs /api/admin/graphql/persisted-queries", async () => {
-    const { client, fetchFn } = mkClient([
-      {
-        id: "pq1",
-        name: "GetContent",
-        query: "query { content { id } }",
-        created_at: "",
-        updated_at: "",
-      },
-    ]);
-    const queries = await listPersistedQueries(client);
-    expect(queries).toHaveLength(1);
-    expect(queries[0].name).toBe("GetContent");
+  it("listPersistedQueries GETs the collection with its trailing slash", async () => {
+    const { client, fetchFn } = mkClient({
+      data: [record],
+      total: 1,
+      limit: 50,
+      offset: 0,
+    });
+    const list = await listPersistedQueries(client);
+    expect(list.total).toBe(1);
+    expect(list.data[0].query_hash).toBe("ab12");
     expect(fetchFn.mock.calls[0][0]).toBe(
-      "/api/admin/graphql/persisted-queries",
+      "/api/admin/graphql/persisted-queries/",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("GET");
   });
 
-  it("createPersistedQuery POSTs input to /api/admin/graphql/persisted-queries", async () => {
+  it("listPersistedQueries sends search, limit and offset", async () => {
     const { client, fetchFn } = mkClient({
-      id: "pq2",
-      name: "UpdateContent",
-      query: "mutation { updateContent }",
-      created_at: "",
-      updated_at: "",
+      data: [],
+      total: 0,
+      limit: 10,
+      offset: 20,
     });
-    const input = {
-      name: "UpdateContent",
-      query: "mutation { updateContent }",
-      variables: { id: "123" },
-    };
-    const query = await createPersistedQuery(input, client);
-    expect(query.name).toBe("UpdateContent");
+    await listPersistedQueries(client, {
+      search: "content",
+      limit: 10,
+      offset: 20,
+    });
     expect(fetchFn.mock.calls[0][0]).toBe(
-      "/api/admin/graphql/persisted-queries",
+      "/api/admin/graphql/persisted-queries/?search=content&limit=10&offset=20",
+    );
+  });
+
+  it("createPersistedQuery POSTs the input to the collection", async () => {
+    const { client, fetchFn } = mkClient(record, 201);
+    const input = {
+      query: "query { content { id } }",
+      operation_name: "GetContent",
+    };
+    const created = await createPersistedQuery(input, client);
+    expect(created.query_hash).toBe("ab12");
+    expect(fetchFn.mock.calls[0][0]).toBe(
+      "/api/admin/graphql/persisted-queries/",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
     expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
   });
 
-  it("deletePersistedQuery DELETEs /api/admin/graphql/persisted-queries/{id}", async () => {
-    const { client, fetchFn } = mkClient(undefined, 204);
-    await deletePersistedQuery("pq1", client);
+  it("getPersistedQuery GETs one query by hash", async () => {
+    const { client, fetchFn } = mkClient(record);
+    await getPersistedQuery("ab12", client);
     expect(fetchFn.mock.calls[0][0]).toBe(
-      "/api/admin/graphql/persisted-queries/pq1",
+      "/api/admin/graphql/persisted-queries/ab12",
+    );
+    expect(fetchFn.mock.calls[0][1].method).toBe("GET");
+  });
+
+  it("deletePersistedQuery DELETEs one query by hash", async () => {
+    const { client, fetchFn } = mkClient(undefined, 204);
+    await deletePersistedQuery("ab12", client);
+    expect(fetchFn.mock.calls[0][0]).toBe(
+      "/api/admin/graphql/persisted-queries/ab12",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("DELETE");
   });
 
-  it("deletePersistedQuery encodes the query id", async () => {
+  it("deletePersistedQuery encodes the hash", async () => {
     const { client, fetchFn } = mkClient(undefined, 204);
     await deletePersistedQuery("pq/1", client);
     expect(fetchFn.mock.calls[0][0]).toBe(
@@ -77,29 +106,16 @@ describe("REST GraphQL admin", () => {
     );
   });
 
-  it("updatePersistedQuery PATCHes input to /api/admin/graphql/persisted-queries/{id}", async () => {
+  it("togglePersistedQuery PATCHes the toggle route", async () => {
     const { client, fetchFn } = mkClient({
-      id: "pq1",
-      name: "Renamed",
-      query: "query { content { id title } }",
-      created_at: "",
-      updated_at: "",
+      query_hash: "ab12",
+      enabled: false,
     });
-    const input = { name: "Renamed", query: "query { content { id title } }" };
-    const query = await updatePersistedQuery("pq1", input, client);
-    expect(query.name).toBe("Renamed");
+    const res = await togglePersistedQuery("ab12", client);
+    expect(res.enabled).toBe(false);
     expect(fetchFn.mock.calls[0][0]).toBe(
-      "/api/admin/graphql/persisted-queries/pq1",
+      "/api/admin/graphql/persisted-queries/ab12/toggle",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("PATCH");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
-  });
-
-  it("updatePersistedQuery sends partial update", async () => {
-    const { client, fetchFn } = mkClient({});
-    await updatePersistedQuery("pq1", { name: "JustName" }, client);
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
-      name: "JustName",
-    });
   });
 });

@@ -5,6 +5,67 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-10-01
+
+### Changed
+
+- **Breaking:** `setup(email, password, setupToken, client)` takes the engine's
+  setup token as its third argument and sends it as `setup_token`. The engine
+  creates the first super admin only for a caller holding that token (its
+  `LYEVE_SETUP_TOKEN`, or the one-time token it logs at boot) and answers
+  401 otherwise, so the old three-argument call can no longer succeed. Callers
+  add the token; nothing else about the response changes. Release this in the
+  next minor version.
+- `getSetupStatus` returns `SetupStatus`, which adds the optional
+  `token_source` (`"env"` or `"log"`) the engine reports while setup is open.
+
+### Removed
+
+- **Breaking:** `rollbackPlugin`, `getMigrationCompat`, `safeUpgradePlugin`,
+  `getChangelog` and the types `MigrationCompatibilityResult` and
+  `RollbackResult`. The engine no longer serves those routes: a plugin's
+  version moves with the engine image and its migrations run when the engine
+  starts. Release this in the next minor version.
+- The `providers` module: `listProviders`, `getProvider`, `createProvider`,
+  `updateProvider`, `deleteProvider`, `listCapabilities`, `upsertCapability`,
+  `getMetrics`, `getDashboard`, `listFallbackRules`, `PROVIDER_TYPES`,
+  `CAPABILITIES` and their types. Every one of them called
+  `/api/admin/providers*`, which the engine no longer serves, so each call
+  answered 404. AI provider configuration lives under `/api/admin/ai/providers`,
+  served by the AI plugin.
+
+### Fixed
+
+- `SetupStatus` declares `mode`, which an engine in setup mode reports as
+  `"setup"`, and the `updateContent` doc says it is a partial update: only
+  the fields sent are written and validated.
+- `listPersistedQueries` and `createPersistedQuery` call
+  `/api/admin/graphql/persisted-queries/`. The server registers the persisted
+  query routes under that prefix with a wildcard, so the bare path they used
+  answered 404. `listPersistedQueries` returns the server's
+  `{ data, total, limit, offset }` envelope and takes optional `search`,
+  `limit` and `offset`. `PersistedQuery` and `PersistedQueryInput` carry the
+  fields the server sends and reads (`query_hash`, `query`, `operation_name`,
+  `description`, `enabled`) instead of `id`, `name` and `variables`, which it
+  never had.
+- The README examples compile against the exported API, the declared Node
+  floor reads 24, and the argument order of the functions that take optional
+  arguments after the `HttpClient` is listed.
+
+### Added
+
+- `PluginStatus` carries `version`, `manifest` and `routes`, the routes a
+  running plugin serves with their method, pattern and group. The types
+  `PluginManifest`, `PluginRoute` and `PluginRouteGroup` are exported.
+- `getPersistedQuery` and `togglePersistedQuery`, for the two routes the
+  server serves that the client did not reach.
+
+### Deprecated
+
+- `updatePersistedQuery`. The server has no route that edits a persisted
+  query, so it always fails with 405. A query is keyed by the hash of its
+  text: store the new text and delete the old entry.
+
 ## [0.2.3] - 2026-09-12
 
 ### Fixed
@@ -32,7 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation and shipped strings no longer carry em dashes, unicode
   ellipses or unicode bullets. Where a string is an error or a log line the
   wording changed and nothing else: status codes, machine-readable error codes
-  and behaviour are untouched, so a client matching on a code is unaffected.
+  and behavior are untouched, so a client matching on a code is unaffected.
 - An elision inside a code span now uses three ASCII periods, so a reader who
   copies one gets something their tool accepts.
 
@@ -44,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tag, with the version beside it so the reference stays readable. This package
   publishes to npm and its workflows hold a publish token, and a tag is a moving
   reference the action author can repoint at any time.
-- Built on Go 1.27.1, node 26.8.1 and pnpm 11.25.0. The organisation had been building
+- Built on Go 1.27.1, node 26.8.1 and pnpm 11.25.0. The organization had been building
   on two Go versions at once, resolved by which directory you were standing in.
 - Build scripts are named explicitly, which pnpm 11 requires before it runs them.
 
