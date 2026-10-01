@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Breaking:** `rollbackPlugin`, `getMigrationCompat`, `safeUpgradePlugin`,
+  `getChangelog` and the types `MigrationCompatibilityResult` and
+  `RollbackResult`. The engine no longer serves those routes: a plugin's
+  version moves with the engine image and its migrations run when the engine
+  starts. Release this in the next minor version.
 - The `providers` module: `listProviders`, `getProvider`, `createProvider`,
   `updateProvider`, `deleteProvider`, `listCapabilities`, `upsertCapability`,
   `getMetrics`, `getDashboard`, `listFallbackRules`, `PROVIDER_TYPES`,
@@ -49,6 +54,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `PluginStatus` carries `version`, `manifest` and `routes`, the routes a
+  running plugin serves with their method, pattern and group. The types
+  `PluginManifest`, `PluginRoute` and `PluginRouteGroup` are exported.
 - `getPersistedQuery` and `togglePersistedQuery`, for the two routes the
   server serves that the client did not reach.
 
