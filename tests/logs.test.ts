@@ -93,12 +93,13 @@ describe("REST logs", () => {
 
   it("getLoggingLevels GETs /api/admin/logging/levels", async () => {
     const { client, fetchFn } = mkClient({
-      default_level: 0,
-      tenants: {},
+      default_level: "INFO",
+      tenants: { acme: "DEBUG" },
       plugins: {},
     });
     const levels = await getLoggingLevels(client);
-    expect(levels.default_level).toBe(0);
+    expect(levels.default_level).toBe("INFO");
+    expect(levels.tenants.acme).toBe("DEBUG");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/logging/levels");
     expect(fetchFn.mock.calls[0][1].method).toBe("GET");
   });
@@ -106,7 +107,7 @@ describe("REST logs", () => {
   it("getLoggingConfig GETs /api/admin/logging/config", async () => {
     const { client, fetchFn } = mkClient({
       sinks: [{ driver: "stdout" }],
-      levels: { default_level: 0, tenants: {}, plugins: {} },
+      levels: { default_level: "INFO", tenants: {}, plugins: {} },
       redacted_fields: ["password"],
     });
     const config = await getLoggingConfig(client);
