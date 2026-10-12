@@ -23,12 +23,13 @@ export interface LogSearchResponse {
   offset: number;
 }
 
-/** Point-in-time log-level configuration. Level values are slog.Level integers:
- *  DEBUG=-4, INFO=0, WARN=4, ERROR=8. */
+/** Point-in-time log-level configuration. Each level is a name: DEBUG, INFO,
+ *  WARN or ERROR. A level between two of them reads as the lower name with an
+ *  offset, such as "INFO+2". */
 export interface LogLevelSnapshot {
-  default_level: number;
-  tenants: Record<string, number>;
-  plugins: Record<string, number>;
+  default_level: string;
+  tenants: Record<string, string>;
+  plugins: Record<string, string>;
 }
 
 /** A configured log sink backend (secrets redacted). */
