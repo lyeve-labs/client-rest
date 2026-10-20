@@ -53,7 +53,7 @@ describe("REST permissions", () => {
     expect(perm.role).toBe("admin");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/permissions");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("deletePermission DELETEs /api/admin/permissions/{id}", async () => {

@@ -77,7 +77,7 @@ describe("REST GraphQL admin", () => {
       "/api/admin/graphql/persisted-queries/",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("getPersistedQuery GETs one query by hash", async () => {

@@ -38,18 +38,19 @@ describe("REST OAuth providers", () => {
     });
     const input = {
       name: "Google",
-      provider: "google" as const,
       client_secret: "sec",
       client_id: "cid",
-      redirect_uri: "https://example.com/cb",
+      issuer_url: "https://accounts.google.com",
       scopes: ["email"],
+      roles_claim: "",
+      default_roles: ["user"],
       enabled: true,
     };
     const provider = await createOAuthProvider(input, client);
     expect(provider.name).toBe("Google");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/oauth-providers");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("updateOAuthProvider PUTs data to /api/admin/oauth-providers/{id}", async () => {
@@ -62,7 +63,7 @@ describe("REST OAuth providers", () => {
     expect(provider.name).toBe("GitHub Enterprise");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/oauth-providers/o1");
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(data);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(data);
   });
 
   it("updateOAuthProvider encodes the provider id", async () => {
