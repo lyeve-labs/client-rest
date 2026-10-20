@@ -33,7 +33,7 @@ describe("REST auth", () => {
     const { client, fetchFn } = mkClient({ user: {}, token: "t" });
     await login("a@b.co", "pw", client);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/auth/login");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       email: "a@b.co",
       password: "pw",
     });
@@ -43,7 +43,7 @@ describe("REST auth", () => {
     const { client, fetchFn } = mkClient({ token: "t" });
     await mfaVerify("ch", "123456", client);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/auth/mfa-verify");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       challenge_token: "ch",
       code: "123456",
     });
@@ -64,7 +64,7 @@ describe("REST auth", () => {
     await setup("a@b.co", "pw", "0123456789abcdef", client);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/setup");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       email: "a@b.co",
       password: "pw",
       setup_token: "0123456789abcdef",

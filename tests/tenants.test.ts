@@ -96,7 +96,7 @@ describe("REST tenants - CRUD", () => {
     expect(tenant.slug).toBe("new-tenant");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/tenants");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("createTenant omits plan when not provided", async () => {
@@ -111,7 +111,7 @@ describe("REST tenants - CRUD", () => {
       archived: false,
     });
     await createTenant({ slug: "no-plan", name: "No Plan" }, client);
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       slug: "no-plan",
       name: "No Plan",
     });
@@ -133,7 +133,7 @@ describe("REST tenants - CRUD", () => {
     expect(tenant.name).toBe("Updated Name");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/tenants/t1");
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("deleteTenant DELETEs /api/admin/tenants/{id}", async () => {
@@ -161,7 +161,7 @@ describe("REST tenants - lifecycle", () => {
     expect(tenant.archived).toBe(true);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/tenants/t1/archive");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 
   it("restoreTenant POSTs to /api/admin/tenants/{id}/restore", async () => {
@@ -170,7 +170,7 @@ describe("REST tenants - lifecycle", () => {
     expect(tenant.archived).toBe(false);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/tenants/t1/restore");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 
   it("archiveToColdStorage POSTs to /api/admin/tenants/{id}/cold-archive", async () => {
@@ -185,7 +185,7 @@ describe("REST tenants - lifecycle", () => {
     expect(archive.archive_path).toContain("s3://");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/tenants/t1/cold-archive");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 
   it("listTenantArchives GETs /api/admin/tenants/{id}/archives", async () => {
@@ -222,7 +222,7 @@ describe("REST tenants - lifecycle", () => {
       "/api/admin/tenants/t1/archives/a1/restore",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 
   it("restoreFromArchive encodes both ids", async () => {

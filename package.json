@@ -1,6 +1,6 @@
 {
   "name": "@lyeve-labs/client-rest",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "REST API client for the LyEve Core - typed fetch functions for all admin and content endpoints",
   "license": "MIT",
   "author": "LyEve <info@lyeve.com>",
@@ -57,7 +57,7 @@
     "@lyeve-labs/client": ">=0.2.1"
   },
   "devDependencies": {
-    "@lyeve-labs/client": "^0.3.0",
+    "@lyeve-labs/client": "^0.5.0",
     "tsup": "^8.4.0",
     "typescript": "^5.7.0",
     "vitest": "^2.1.0",

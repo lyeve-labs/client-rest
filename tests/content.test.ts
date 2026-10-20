@@ -34,7 +34,7 @@ describe("REST content", () => {
     const { client, fetchFn } = mkClient({ id: "c1" });
     await createContent("articles", { title: "Hello" }, client);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/v1/content/articles");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       data: { title: "Hello" },
     });
   });

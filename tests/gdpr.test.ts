@@ -26,7 +26,7 @@ describe("REST GDPR", () => {
     expect(result.summary.total_records).toBe(5);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/gdpr/export");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       identifier: "user@example.com",
     });
   });
@@ -41,7 +41,7 @@ describe("REST GDPR", () => {
     expect(result.total_rows).toBe(10);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/gdpr/erase");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       identifier: "user@example.com",
     });
   });
@@ -54,7 +54,7 @@ describe("REST GDPR", () => {
       errors: [],
     });
     await exportSubject("user+tag@domain.com", client);
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       identifier: "user+tag@domain.com",
     });
   });

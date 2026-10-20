@@ -1,3 +1,8 @@
 allowBuilds:
   esbuild: true
 minimumReleaseAgeStrict: true
+# Our own release is exempt from the age rule, which guards against a
+# third-party version published while nobody was looking. Every other package
+# stays subject to it.
+minimumReleaseAgeExclude:
+  - "@lyeve-labs/client@0.5.0"

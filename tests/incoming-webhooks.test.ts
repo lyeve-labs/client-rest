@@ -65,7 +65,7 @@ describe("REST incoming webhooks", () => {
     expect(hook.name).toBe("Slack Command");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/incoming-webhooks");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("updateIncomingWebhook PUTs input to /api/admin/incoming-webhooks/{id}", async () => {
@@ -79,7 +79,7 @@ describe("REST incoming webhooks", () => {
     expect(hook.name).toBe("Updated");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/incoming-webhooks/iw1");
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("deleteIncomingWebhook DELETEs /api/admin/incoming-webhooks/{id}", async () => {
