@@ -40,7 +40,7 @@ describe("REST users", () => {
     expect(user.email).toBe("new@b.co");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/users");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       email: "new@b.co",
       password: "p4ss",
       roles: ["editor"],
@@ -56,7 +56,7 @@ describe("REST users", () => {
     expect(user.roles).toEqual(["admin", "editor"]);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/users/u1/roles");
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       roles: ["admin", "editor"],
     });
   });

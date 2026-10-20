@@ -10,7 +10,11 @@ describe("SetupStatus", () => {
 describe("LogLevelSnapshot", () => {
   it("carries level names, as the engine sends them", () => {
     expectTypeOf<LogLevelSnapshot["default_level"]>().toEqualTypeOf<string>();
-    expectTypeOf<LogLevelSnapshot["tenants"]>().toEqualTypeOf<Record<string, string>>();
-    expectTypeOf<LogLevelSnapshot["plugins"]>().toEqualTypeOf<Record<string, string>>();
+    expectTypeOf<LogLevelSnapshot["tenants"]>().toEqualTypeOf<
+      Record<string, string>
+    >();
+    expectTypeOf<LogLevelSnapshot["plugins"]>().toEqualTypeOf<
+      Record<string, string>
+    >();
   });
 });

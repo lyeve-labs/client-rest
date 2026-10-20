@@ -46,7 +46,7 @@ describe("REST API keys", () => {
     expect(result.id).toBe("k2");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/api-keys");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("createAPIKey with null expires_at", async () => {
@@ -58,7 +58,7 @@ describe("REST API keys", () => {
       expires_at: null,
     };
     await createAPIKey(input, client);
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("revokeAPIKey POSTs to /api/admin/api-keys/{id}/revoke", async () => {
@@ -66,7 +66,7 @@ describe("REST API keys", () => {
     await revokeAPIKey("k1", client);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/api-keys/k1/revoke");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 
   it("revokeAPIKey encodes the key id", async () => {

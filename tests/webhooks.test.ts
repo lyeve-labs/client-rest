@@ -79,7 +79,7 @@ describe("REST webhooks - CRUD", () => {
     expect(hook.name).toBe("My Webhook");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/webhooks");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("updateWebhook PUTs partial input to /api/admin/webhooks/{id}", async () => {
@@ -89,7 +89,7 @@ describe("REST webhooks - CRUD", () => {
     expect(hook.enabled).toBe(true);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/webhooks/wh1");
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("deleteWebhook DELETEs /api/admin/webhooks/{id}", async () => {
@@ -100,12 +100,16 @@ describe("REST webhooks - CRUD", () => {
   });
 
   it("testWebhook POSTs to /api/admin/webhooks/{id}/test", async () => {
-    const { client, fetchFn } = mkClient({ ok: true, status_code: 200 });
+    const { client, fetchFn } = mkClient({
+      success: true,
+      status_code: 200,
+      message: "OK",
+    });
     const result = await testWebhook("wh1", client);
-    expect(result.ok).toBe(true);
+    expect(result.success).toBe(true);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/webhooks/wh1/test");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 });
 
@@ -136,7 +140,7 @@ describe("REST webhooks - deliveries & rotation", () => {
       "/api/admin/webhooks/wh1/rotate-secret",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       new_secret: "new-secret",
     });
   });
@@ -144,24 +148,26 @@ describe("REST webhooks - deliveries & rotation", () => {
   it("rotateSecret(id, client) with no secret sends new_secret: undefined", async () => {
     const { client, fetchFn } = mkClient(webhook);
     await rotateSecret("wh1", client);
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       new_secret: undefined,
     });
   });
 
   it("retryDelivery POSTs to /api/admin/webhooks/{id}/deliveries/{deliveryId}/retry", async () => {
     const { client, fetchFn } = mkClient({
-      id: "d1",
-      status: "retried",
-      http_status: 200,
+      success: true,
+      status_code: 200,
+      message: "OK",
+      delivery_id: "d1",
     });
     const result = await retryDelivery("wh1", "d1", client);
-    expect(result.status).toBe("retried");
+    expect(result.success).toBe(true);
+    expect(result.delivery_id).toBe("d1");
     expect(fetchFn.mock.calls[0][0]).toBe(
       "/api/admin/webhooks/wh1/deliveries/d1/retry",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 });
 
@@ -224,7 +230,7 @@ describe("REST webhooks - dead letter queue", () => {
       "/api/admin/webhook-dead-letters/dl1/replay",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 
   it("dismissDeadLetter POSTs to /api/admin/webhook-dead-letters/{id}/dismiss", async () => {
@@ -235,7 +241,7 @@ describe("REST webhooks - dead letter queue", () => {
       "/api/admin/webhook-dead-letters/dl1/dismiss",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 
   it("deleteDeadLetter DELETEs /api/admin/webhook-dead-letters/{id}", async () => {
@@ -276,16 +282,18 @@ describe("REST webhooks - retry config & health", () => {
       "/api/admin/webhooks/wh1/retry-config",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(input);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(input);
   });
 
   it("getWebhookHealth GETs /api/admin/webhooks/{id}/health", async () => {
     const { client, fetchFn } = mkClient({
-      total_deliveries: 100,
-      success_rate: 0.95,
+      webhook_id: "wh1",
+      total_attempts: 100,
+      success_count: 95,
+      healthy: true,
     });
     const health = await getWebhookHealth("wh1", client);
-    expect(health.total_deliveries).toBe(100);
+    expect(health.total_attempts).toBe(100);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/admin/webhooks/wh1/health");
     expect(fetchFn.mock.calls[0][1].method).toBe("GET");
   });

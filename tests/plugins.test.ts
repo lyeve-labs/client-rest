@@ -91,7 +91,7 @@ describe("REST plugins - config", () => {
       "/api/admin/plugins/my-plugin/config",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual(cfg);
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual(cfg);
   });
 
   it("resetPluginConfig POSTs to /api/admin/plugins/{name}/config/reset", async () => {
@@ -102,6 +102,6 @@ describe("REST plugins - config", () => {
       "/api/admin/plugins/my-plugin/config/reset",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 });

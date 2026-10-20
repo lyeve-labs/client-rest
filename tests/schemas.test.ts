@@ -9,11 +9,11 @@ import {
 } from "../src/index.js";
 import type { Schema } from "@lyeve-labs/client";
 
-function mkClient(body: unknown = {}) {
+function mkClient(body: unknown = {}, status = 200) {
   const fetchFn = vi.fn(
     async (_url: string, _init: RequestInit): Promise<Response> =>
-      new Response(JSON.stringify(body), {
-        status: 200,
+      new Response(status === 204 ? null : JSON.stringify(body), {
+        status,
         headers: { "content-type": "application/json" },
       }),
   );

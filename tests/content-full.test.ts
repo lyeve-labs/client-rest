@@ -84,7 +84,7 @@ describe("REST content - CRUD", () => {
     expect(item.data).toEqual({ title: "New Article" });
     expect(fetchFn.mock.calls[0][0]).toBe("/api/v1/content/articles");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       data: { title: "New Article" },
     });
   });
@@ -103,7 +103,7 @@ describe("REST content - CRUD", () => {
     expect(item.data.title).toBe("Updated");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/v1/content/articles/e1");
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       data: { title: "Updated" },
     });
   });
@@ -127,7 +127,9 @@ describe("REST content - bulk & publishing", () => {
     expect(results).toHaveLength(2);
     expect(fetchFn.mock.calls[0][0]).toBe("/api/v1/content/articles/bulk");
     expect(fetchFn.mock.calls[0][1].method).toBe("POST");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({ items });
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
+      items,
+    });
   });
 
   it("publishContent PUTs to /api/v1/content/{schema}/{id}/publish", async () => {
@@ -137,7 +139,7 @@ describe("REST content - bulk & publishing", () => {
       "/api/v1/content/articles/e1/publish",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 
   it("unpublishContent PUTs to /api/v1/content/{schema}/{id}/unpublish", async () => {
@@ -147,7 +149,7 @@ describe("REST content - bulk & publishing", () => {
       "/api/v1/content/articles/e1/unpublish",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 });
 
@@ -181,7 +183,7 @@ describe("REST content - revisions", () => {
       "/api/v1/content/articles/e1/revisions/r1/restore",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({});
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({});
   });
 });
 
@@ -212,7 +214,7 @@ describe("REST content - relations", () => {
       "/api/v1/content/articles/e1/relations/author",
     );
     expect(fetchFn.mock.calls[0][1].method).toBe("PUT");
-    expect(JSON.parse(fetchFn.mock.calls[0][1].body)).toEqual({
+    expect(JSON.parse(String(fetchFn.mock.calls[0][1].body))).toEqual({
       ids: ["a1", "a2"],
     });
   });
