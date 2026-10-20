@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-10-20
+
+### Fixed
+
+- Log levels are typed as the names the engine sends, such as `"INFO"` or `"DEBUG"`, for the default level and for every tenant and plugin. They were typed as numbers, so a comparison against a number never matched and formatting the value was a type error for correct code. Code that treated a level as a number gets a type error where it was already wrong at run time.
+- The type tests run under the type check. They asserted with `expectTypeOf`, which does nothing at run time, and the type check never read them, so they passed whatever the types said.
+
 ## [0.3.0] - 2026-10-01
 
 ### Changed
