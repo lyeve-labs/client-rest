@@ -9,7 +9,8 @@ export interface LegalHoldRef {
   tenant_id: string;
   /** The user id that placed the hold, or `system`. */
   placed_by: string;
-  placed_by_email: string;
+  /** Absent when the placer has no address, as for a hold the system placed. */
+  placed_by_email?: string;
   placed_at?: string;
 }
 
