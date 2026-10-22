@@ -46,6 +46,40 @@ describe("REST GDPR", () => {
     });
   });
 
+  it("eraseSubject sends the override fields only when given an override", async () => {
+    const { client, fetchFn } = mkClient({
+      identifier: "user@example.com",
+      total_rows: 10,
+      overridden_holds: [
+        {
+          id: "hold-1",
+          reason: "Smith v. Acme",
+          scope: "subject",
+          tenant_id: "acme",
+          placed_by: "system",
+          placed_by_email: "",
+        },
+      ],
+    });
+    await eraseSubject("user@example.com", client);
+    expect(
+      Object.keys(JSON.parse(String(fetchFn.mock.calls[0][1].body))),
+    ).toEqual(["identifier"]);
+
+    const result = await eraseSubject("user@example.com", client, {
+      override_legal_hold: true,
+      override_reason: "Court order lifted the duty to preserve",
+      confirmed_hold_ids: ["hold-1"],
+    });
+    expect(JSON.parse(String(fetchFn.mock.calls[1][1].body))).toEqual({
+      identifier: "user@example.com",
+      override_legal_hold: true,
+      override_reason: "Court order lifted the duty to preserve",
+      confirmed_hold_ids: ["hold-1"],
+    });
+    expect(result.overridden_holds?.[0].id).toBe("hold-1");
+  });
+
   it("exportSubject handles special characters in identifier", async () => {
     const { client, fetchFn } = mkClient({
       identifier: "user+tag@domain.com",
