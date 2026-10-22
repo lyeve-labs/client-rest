@@ -135,6 +135,17 @@ export type {
   DsarExportError,
 } from "./gdpr.js";
 
+// The engine's refusal when a legal hold covers the data, and the override.
+export { isLegalHoldError } from "./legal-hold.js";
+export type {
+  LegalHoldRef,
+  LegalHoldRefusal,
+  LegalHoldOverride,
+  LegalHoldError,
+  ImpactCount,
+  ImpactKind,
+} from "./legal-hold.js";
+
 export {
   getSummary,
   getEndpoints,

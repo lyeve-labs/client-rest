@@ -1,4 +1,5 @@
 import type { HttpClient } from "@lyeve-labs/client";
+import type { LegalHoldOverride, LegalHoldRef } from "./legal-hold.js";
 
 /** Aggregate statistics for a subject export operation. */
 export interface DsarExportSummary {
@@ -26,6 +27,8 @@ export interface DsarEraseResult {
   identifier: string;
   total_rows: number;
   errors?: string[];
+  /** The legal holds a super admin erased past, present only on an override. */
+  overridden_holds?: LegalHoldRef[];
 }
 
 /**
@@ -44,12 +47,22 @@ export function exportSubject(
 /**
  * Erase/anonymize all PII held for a data subject across every plugin.
  * The backend body field is `identifier`. `super_admin` role required.
+ *
+ * A legal hold on the subject or the tenant refuses with a 409 that
+ * `isLegalHoldError` recognizes. Pass `override` to erase anyway. Its fields
+ * are sent only then, because an older engine refuses fields it does not know.
  */
 export function eraseSubject(
   subject: string,
   client: HttpClient,
+  override?: LegalHoldOverride,
 ): Promise<DsarEraseResult> {
   return client.post<DsarEraseResult>("/api/admin/gdpr/erase", {
     identifier: subject,
+    ...(override && {
+      override_legal_hold: override.override_legal_hold,
+      override_reason: override.override_reason,
+      confirmed_hold_ids: override.confirmed_hold_ids,
+    }),
   });
 }
