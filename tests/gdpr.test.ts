@@ -80,6 +80,62 @@ describe("REST GDPR", () => {
     expect(result.overridden_holds?.[0].id).toBe("hold-1");
   });
 
+  it("eraseSubject reads a 200 as a complete erasure", async () => {
+    const { client } = mkClient(
+      {
+        identifier: "user@example.com",
+        total_rows: 10,
+        complete: true,
+        errors: null,
+      },
+      200,
+    );
+    const result = await eraseSubject("user@example.com", client);
+    expect(result.complete).toBe(true);
+    expect(result.failed).toEqual([]);
+  });
+
+  it("eraseSubject reads a 207 as an incomplete erasure with its failed parts", async () => {
+    const { client } = mkClient(
+      {
+        identifier: "user@example.com",
+        total_rows: 4,
+        complete: false,
+        failed: ["analytics", "account"],
+        errors: [
+          "not finished: analytics, account",
+          "the account was not erased: it is signed out and locked until every other part has erased",
+          "repeat the request to finish the erasure",
+        ],
+      },
+      207,
+    );
+    const result = await eraseSubject("user@example.com", client);
+    expect(result.complete).toBe(false);
+    expect(result.failed).toEqual(["analytics", "account"]);
+    expect(result.total_rows).toBe(4);
+  });
+
+  it("eraseSubject reads an older engine's answer by its errors", async () => {
+    const done = mkClient({
+      identifier: "a@example.com",
+      total_rows: 3,
+      errors: null,
+    });
+    expect((await eraseSubject("a@example.com", done.client)).complete).toBe(
+      true,
+    );
+
+    const partial = mkClient({
+      identifier: "a@example.com",
+      total_rows: 3,
+      errors: ["one or more erasers failed"],
+    });
+    const result = await eraseSubject("a@example.com", partial.client);
+    expect(result.complete).toBe(false);
+    expect(result.failed).toEqual([]);
+  });
+
   it("exportSubject handles special characters in identifier", async () => {
     const { client, fetchFn } = mkClient({
       identifier: "user+tag@domain.com",
