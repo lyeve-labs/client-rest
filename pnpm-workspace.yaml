@@ -1,11 +1,6 @@
 allowBuilds:
   esbuild: true
 minimumReleaseAgeStrict: true
-# Our own release is exempt from the age rule, which guards against a
-# third-party version published while nobody was looking. Every other package
-# stays subject to it.
-minimumReleaseAgeExclude:
-  - "@lyeve-labs/client@0.5.0"
 overrides:
   # GHSA-g7r4-m6w7-qqqr: tsup 8 asks for esbuild 0.27, and the fix is in 0.28.1.
   esbuild: ^0.28.2
