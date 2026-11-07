@@ -10,7 +10,6 @@ export interface ContentRevision {
 
 export interface ContentRelation {
   id: string;
-  schema_name: string;
   data: Record<string, unknown>;
 }
 

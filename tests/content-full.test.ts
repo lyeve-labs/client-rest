@@ -32,7 +32,6 @@ describe("REST content - CRUD", () => {
     const { client, fetchFn } = mkClient([
       {
         id: "e1",
-        schema_name: "articles",
         data: { title: "Hello" },
         created_at: "",
         updated_at: "",
@@ -40,7 +39,7 @@ describe("REST content - CRUD", () => {
     ]);
     const items = await listContent("articles", client, 10, 0);
     expect(items).toHaveLength(1);
-    expect(items[0].schema_name).toBe("articles");
+    expect(items[0].data).toEqual({ title: "Hello" });
     expect(fetchFn.mock.calls[0][0]).toBe(
       "/api/v1/content/articles?limit=10&offset=0",
     );
@@ -64,7 +63,7 @@ describe("REST content - CRUD", () => {
   });
 
   it("getContent GETs /api/v1/content/{schema}/{id}", async () => {
-    const { client, fetchFn } = mkClient({ id: "e1", schema_name: "articles" });
+    const { client, fetchFn } = mkClient({ id: "e1" });
     const item = await getContent("articles", "e1", client);
     expect(item.id).toBe("e1");
     expect(fetchFn.mock.calls[0][0]).toBe("/api/v1/content/articles/e1");
@@ -190,7 +189,7 @@ describe("REST content - revisions", () => {
 describe("REST content - relations", () => {
   it("listContentRelations GETs /api/v1/content/{schema}/{id}/relations/{field}", async () => {
     const { client, fetchFn } = mkClient({
-      data: [{ id: "r1", schema_name: "authors", data: { name: "Alice" } }],
+      data: [{ id: "r1", data: { name: "Alice" } }],
       total: 1,
     });
     const result = await listContentRelations(
@@ -200,7 +199,7 @@ describe("REST content - relations", () => {
       client,
     );
     expect(result.data).toHaveLength(1);
-    expect(result.data[0].schema_name).toBe("authors");
+    expect(result.data[0].data).toEqual({ name: "Alice" });
     expect(fetchFn.mock.calls[0][0]).toBe(
       "/api/v1/content/articles/e1/relations/author",
     );
