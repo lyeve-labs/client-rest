@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `listContent`, `listContentCursor` and `getContent` take `ContentReadOptions` as a last argument: `populate`, `depth`, `locale` and `fields`. Every existing call sends the same request it did.
+- `listContent` takes `filters` in `ContentListOptions`, sent as `filters[column]=value`, each keeping the entries whose column equals the value by the column's collation.
 
 ### Removed
 

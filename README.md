@@ -137,6 +137,8 @@ The three content reads take `ContentReadOptions`:
 - `locale` serves entries in a language when the localization plugin is on, ahead of the Accept-Language header, and each entry served in a locale carries `resolved_locale`. A malformed tag is refused with 400.
 - `fields` narrows each entry's `data` to the named fields. A field the caller cannot read is refused with 400. An engine that predates `fields` ignores it and returns every field.
 
+`listContent` takes `ContentListOptions`, which adds `filters`: each keeps the entries whose column equals the value, as in `{ filters: { author_id: "..." } }`. The comparison follows the column's collation, so a text match on MySQL or SQL Server ignores case, and a relation is filtered by its column. A column the content type does not have is refused with 400. A column the caller cannot read is refused with 403, and so is a `_status` other than `published` from a caller who cannot read drafts. The cursor read takes no filters.
+
 ## Local development
 
 ```bash
