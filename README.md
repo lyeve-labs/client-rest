@@ -89,6 +89,10 @@ await upsertSchema(
 
 // Content
 const entries = await listContent("articles", client, 20);
+const titles = await listContent("articles", client, 20, 0, {
+  fields: ["title", "author"],
+  populate: ["author"],
+});
 const article = await createContent("articles", { title: "Hello" }, client);
 
 // Webhooks
@@ -118,12 +122,20 @@ const health = await getWebhookHealth("webhook-id", client);
 | graphql-admin     | listPersistedQueries, getPersistedQuery, createPersistedQuery, deletePersistedQuery, togglePersistedQuery                                                                                                                                                                                    |
 
 Every function takes an `HttpClient` after its required arguments. Optional
-arguments follow it: `listContent(schema, client, limit, offset)`,
-`listContentCursor(schema, client, cursor, limit)`, `listDeliveries(id, client, limit)`,
+arguments follow it: `listContent(schema, client, limit, offset, options)`,
+`listContentCursor(schema, client, cursor, limit, options)`,
+`getContent(schema, id, client, options)`, `listDeliveries(id, client, limit)`,
 `rotateSecret(id, client, newSecret)`,
 `listTenants(client, limit, offset)`, `listDeadLetters(client, status, limit, offset)`,
 `searchLogs(client, params)`, `getLogVolume(client, window)` and
 `getRanking(client, schema)`.
+
+The three content reads take `ContentReadOptions`:
+
+- `populate` names relation fields to resolve inline. Dot notation nests (`author.avatar`), and `*` is every relation at that level.
+- `depth` resolves every relation down to that many levels.
+- `locale` serves entries in a language when the localization plugin is on, ahead of the Accept-Language header, and each entry served in a locale carries `resolved_locale`. A malformed tag is refused with 400.
+- `fields` narrows each entry's `data` to the named fields. A field the caller cannot read is refused with 400. An engine that predates `fields` ignores it and returns every field.
 
 ## Local development
 

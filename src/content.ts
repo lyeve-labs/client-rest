@@ -13,6 +13,45 @@ export interface ContentRelation {
   data: Record<string, unknown>;
 }
 
+/**
+ * Options that shape what a content read returns. Each is a query parameter
+ * of the list, cursor and get routes, and an option left out sends nothing.
+ */
+export interface ContentReadOptions {
+  /**
+   * Relation fields to resolve inline. Dot notation nests ("author.avatar"),
+   * and "*" is every relation at that level.
+   */
+  populate?: string[];
+  /** Resolve every relation down to this many levels. */
+  depth?: number;
+  /**
+   * The language tag to serve entries in, when the localization plugin is
+   * on. It takes precedence over Accept-Language, and a malformed tag is
+   * refused with 400. An entry served in a locale carries `resolved_locale`.
+   */
+  locale?: string;
+  /**
+   * Narrow each entry's data to these fields. The entry keeps its id and
+   * timestamps. A relation field keeps both its stored column and its
+   * populated record. A field the caller cannot read is refused with 400.
+   */
+  fields?: string[];
+}
+
+function withReadOptions(
+  params: URLSearchParams,
+  options: ContentReadOptions,
+): URLSearchParams {
+  if (options.populate?.length)
+    params.set("populate", options.populate.join(","));
+  const depth = options.depth ?? 0;
+  if (Number.isInteger(depth) && depth > 0) params.set("depth", String(depth));
+  if (options.locale) params.set("locale", options.locale);
+  if (options.fields?.length) params.set("fields", options.fields.join(","));
+  return params;
+}
+
 export interface CursorPage {
   items: Content[];
   /** Present when more pages are available. */
@@ -31,9 +70,14 @@ export function listContent(
   client: HttpClient,
   limit = 25,
   offset = 0,
+  options: ContentReadOptions = {},
 ): Promise<Content[]> {
+  const params = withReadOptions(
+    new URLSearchParams({ limit: String(limit), offset: String(offset) }),
+    options,
+  );
   return client.get<Content[]>(
-    `/api/v1/content/${encodeURIComponent(schemaName)}?limit=${limit}&offset=${offset}`,
+    `/api/v1/content/${encodeURIComponent(schemaName)}?${params}`,
   );
 }
 
@@ -43,9 +87,11 @@ export async function listContentCursor(
   client: HttpClient,
   cursor?: string,
   limit = 20,
+  options: ContentReadOptions = {},
 ): Promise<CursorPage> {
   const params = new URLSearchParams({ limit: String(limit) });
   if (cursor) params.set("cursor", cursor);
+  withReadOptions(params, options);
   // The route answers {"data": [...], "next_cursor": "..."} and sends no total.
   // Mapped here rather than exposed raw, so callers keep one page shape.
   const page = await client.get<{ data?: Content[]; next_cursor?: string }>(
@@ -59,9 +105,11 @@ export function getContent(
   schemaName: string,
   id: string,
   client: HttpClient,
+  options: ContentReadOptions = {},
 ): Promise<Content> {
+  const query = withReadOptions(new URLSearchParams(), options).toString();
   return client.get<Content>(
-    `/api/v1/content/${encodeURIComponent(schemaName)}/${encodeURIComponent(id)}`,
+    `/api/v1/content/${encodeURIComponent(schemaName)}/${encodeURIComponent(id)}${query ? `?${query}` : ""}`,
   );
 }
 
