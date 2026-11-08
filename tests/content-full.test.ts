@@ -303,11 +303,27 @@ describe("REST content - read options", () => {
     });
   });
 
+  it("listContent sends each filter as filters[field]", async () => {
+    const { client, fetchFn } = mkClient([]);
+    await listContent("articles", client, 25, 0, {
+      filters: { title: "Hello world", _status: "published" },
+      fields: ["title"],
+    });
+    const url = fetchFn.mock.calls[0][0] as string;
+    expect(query(url)).toEqual({
+      limit: "25",
+      offset: "0",
+      "filters[title]": "Hello world",
+      "filters[_status]": "published",
+      fields: "title",
+    });
+  });
+
   it("an empty or zero option sends nothing", async () => {
     const { client, fetchFn } = mkClient({ id: "e1" });
     const empty = { populate: [], depth: 0, locale: "", fields: [] };
     await getContent("articles", "e1", client, empty);
-    await listContent("articles", client, 25, 0, empty);
+    await listContent("articles", client, 25, 0, { ...empty, filters: {} });
     // The engine reads depth as an integer and drops anything else.
     await getContent("articles", "e1", client, { depth: 1.5 });
     expect(fetchFn.mock.calls[0][0]).toBe("/api/v1/content/articles/e1");

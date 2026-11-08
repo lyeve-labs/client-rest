@@ -39,6 +39,20 @@ export interface ContentReadOptions {
   fields?: string[];
 }
 
+/** Options for listContent: the read options and exact-match filters. */
+export interface ContentListOptions extends ContentReadOptions {
+  /**
+   * Keep the entries whose column equals the value, sent as
+   * `filters[column]=value` and compared by the column's collation, so a
+   * text match on MySQL or SQL Server ignores case. A relation is filtered
+   * by its column, such as `author_id`. A column the type does not have is
+   * refused with 400. A column the caller cannot read is refused with 403,
+   * and so is a `_status` other than `published` from a caller who cannot
+   * read drafts.
+   */
+  filters?: Record<string, string>;
+}
+
 function withReadOptions(
   params: URLSearchParams,
   options: ContentReadOptions,
@@ -70,12 +84,16 @@ export function listContent(
   client: HttpClient,
   limit = 25,
   offset = 0,
-  options: ContentReadOptions = {},
+  options: ContentListOptions = {},
 ): Promise<Content[]> {
-  const params = withReadOptions(
-    new URLSearchParams({ limit: String(limit), offset: String(offset) }),
-    options,
-  );
+  const params = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+  });
+  for (const [field, value] of Object.entries(options.filters ?? {})) {
+    params.set(`filters[${field}]`, value);
+  }
+  withReadOptions(params, options);
   return client.get<Content[]>(
     `/api/v1/content/${encodeURIComponent(schemaName)}?${params}`,
   );
