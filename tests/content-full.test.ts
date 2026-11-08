@@ -247,3 +247,73 @@ describe("REST content - cursor pagination", () => {
     expect(url).not.toContain("cursor=");
   });
 });
+
+describe("REST content - read options", () => {
+  const options = {
+    populate: ["author", "tags.icon"],
+    depth: 2,
+    locale: "pt-BR",
+    fields: ["title", "author"],
+  };
+
+  function query(url: string): Record<string, string> {
+    return Object.fromEntries(new URL(url, "http://engine").searchParams);
+  }
+
+  it("listContent sends each option beside limit and offset", async () => {
+    const { client, fetchFn } = mkClient([]);
+    await listContent("articles", client, 10, 5, options);
+    const url = fetchFn.mock.calls[0][0] as string;
+    expect(url.startsWith("/api/v1/content/articles?")).toBe(true);
+    expect(query(url)).toEqual({
+      limit: "10",
+      offset: "5",
+      populate: "author,tags.icon",
+      depth: "2",
+      locale: "pt-BR",
+      fields: "title,author",
+    });
+  });
+
+  it("listContentCursor sends each option beside the cursor", async () => {
+    const { client, fetchFn } = mkClient({ data: [] });
+    await listContentCursor("articles", client, "c1", 10, options);
+    const url = fetchFn.mock.calls[0][0] as string;
+    expect(url.startsWith("/api/v1/content/articles/cursor?")).toBe(true);
+    expect(query(url)).toEqual({
+      limit: "10",
+      cursor: "c1",
+      populate: "author,tags.icon",
+      depth: "2",
+      locale: "pt-BR",
+      fields: "title,author",
+    });
+  });
+
+  it("getContent sends each option", async () => {
+    const { client, fetchFn } = mkClient({ id: "e1" });
+    await getContent("articles", "e1", client, options);
+    const url = fetchFn.mock.calls[0][0] as string;
+    expect(url.startsWith("/api/v1/content/articles/e1?")).toBe(true);
+    expect(query(url)).toEqual({
+      populate: "author,tags.icon",
+      depth: "2",
+      locale: "pt-BR",
+      fields: "title,author",
+    });
+  });
+
+  it("an empty or zero option sends nothing", async () => {
+    const { client, fetchFn } = mkClient({ id: "e1" });
+    const empty = { populate: [], depth: 0, locale: "", fields: [] };
+    await getContent("articles", "e1", client, empty);
+    await listContent("articles", client, 25, 0, empty);
+    // The engine reads depth as an integer and drops anything else.
+    await getContent("articles", "e1", client, { depth: 1.5 });
+    expect(fetchFn.mock.calls[0][0]).toBe("/api/v1/content/articles/e1");
+    expect(fetchFn.mock.calls[1][0]).toBe(
+      "/api/v1/content/articles?limit=25&offset=0",
+    );
+    expect(fetchFn.mock.calls[2][0]).toBe("/api/v1/content/articles/e1");
+  });
+});

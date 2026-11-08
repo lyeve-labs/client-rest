@@ -183,6 +183,7 @@ export {
   listContentCursor,
 } from "./content.js";
 export type {
+  ContentReadOptions,
   ContentRevision,
   ContentRelation,
   CursorPage as ContentCursorPage,

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `listContent`, `listContentCursor` and `getContent` take `ContentReadOptions` as a last argument: `populate`, `depth`, `locale` and `fields`. Every existing call sends the same request it did.
+
 ### Removed
 
 - `ContentRelation` no longer has `schema_name`. The engine stops sending it on a content entry. A related entry belongs to the content type the relation field points at.
